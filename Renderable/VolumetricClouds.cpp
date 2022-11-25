@@ -3,7 +3,7 @@
 VolumetricClouds::VolumetricClouds(int SW, int SH, DrawableClouds * model): SCR_WIDTH(SW), SCR_HEIGHT(SH), model(model) {
 
 	cloudsFBO = new TextureSet(SW, SH, 4);
-	cloudsPostProcessingFBO = new FrameBufferObject(Window::SCR_WIDTH, Window::SCR_HEIGHT, 2);
+	cloudsPostProcessingFBO = new FrameBufferObject(Window::ScreenWidth, Window::ScreenHeight, 2);
 
 }
 
@@ -84,7 +84,7 @@ void VolumetricClouds::draw()
 		cloudsPPShader.setSampler2D("depthMap", s->sceneFBO->depthTex, 2);
 
 		cloudsPPShader.setVec2("cloudRenderResolution", glm::vec2(SCR_WIDTH, SCR_HEIGHT));
-		cloudsPPShader.setVec2("resolution", glm::vec2(Window::SCR_WIDTH , Window::SCR_HEIGHT));
+		cloudsPPShader.setVec2("resolution", glm::vec2(Window::ScreenWidth , Window::ScreenHeight));
 
 		glm::mat4 lightModel;
 		lightModel = glm::translate(lightModel, s->lightPos);

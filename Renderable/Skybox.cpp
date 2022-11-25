@@ -10,7 +10,7 @@ Skybox::Skybox()
 	skyColorBottom = glm::vec3(0.9, 0.9, 0.95);
 
 	skyboxShader = new PostProcessor("shaders/sky.frag");
-	skyboxFBO = new FrameBufferObject(Window::SCR_WIDTH, Window::SCR_HEIGHT);
+	skyboxFBO = new FrameBufferObject(Window::ScreenWidth, Window::ScreenHeight);
 
 	SunsetPreset1();
 	DefaultPreset();
@@ -91,7 +91,7 @@ void Skybox::draw() {
 	Shader& shader = skyboxShader->getShader();
 	shader.use();
 
-	shader.setVec2("resolution", glm::vec2(Window::SCR_WIDTH, Window::SCR_HEIGHT));
+	shader.setVec2("resolution", glm::vec2(Window::ScreenWidth, Window::ScreenHeight));
 	shader.setMat4("inv_proj", glm::inverse(s->projMatrix));
 	shader.setMat4("inv_view", glm::inverse(s->cam->GetViewMatrix()));
 	

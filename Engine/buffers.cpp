@@ -13,7 +13,7 @@ void unbindCurrentFrameBuffer(int scrWidth, int scrHeight) {//call to switch to 
 
 void unbindCurrentFrameBuffer() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, Window::SCR_WIDTH, Window::SCR_HEIGHT);
+	glViewport(0, 0, Window::ScreenWidth, Window::ScreenHeight);
 }
 
 unsigned int createFrameBuffer() {

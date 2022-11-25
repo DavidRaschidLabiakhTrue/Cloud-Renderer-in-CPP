@@ -102,7 +102,7 @@ void PlaneCounter::draw()
 
 void PlaneCounter::unbindFBO() 
 {
-	unbindCurrentFrameBuffer(Window::SCR_WIDTH, Window::SCR_WIDTH);
+	unbindCurrentFrameBuffer(Window::ScreenWidth, Window::ScreenWidth);
 }
 
 
