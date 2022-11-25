@@ -6,19 +6,24 @@
 
 class GUI : public Drawable
 {
-public:
-	GUI(Window& w);
-	~GUI();
+	public:
+		GUI() 
+		{
 
-	virtual void draw();
-	virtual void update();
+		};
+		GUI(Window& w);
+		~GUI();
 
-	GUI& subscribe(Drawable* subscriber);
+		GUI& attach(Drawable* subscriber); // subscriber model
 
-private:
-	// the other drawableObjects expose their setGui() methods (because he let the user handle their own attributes), so they can be subscribed to the GUI class
-	// the GUI class will call the setGui() method for each subscriber
-	std::list<Drawable*> subscribers;
+		virtual void draw();
+		virtual void update();
+
+		
+
+	private:
+
+		std::list<Drawable*> Attachments;
 
 };
 

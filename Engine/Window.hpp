@@ -11,6 +11,7 @@ class Window
 {
 	public:
 		//initializer
+
 		Window(unsigned int SCR_WIDTH = 1600, unsigned int SCR_HEIGHT = 900, std::string name = "Volumetric Cloud Visualizer");
 		~Window();
 		GLFWwindow * WindowPointer;

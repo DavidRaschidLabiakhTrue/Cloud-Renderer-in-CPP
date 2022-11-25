@@ -2,39 +2,50 @@
 #include <string>
 #include <glad/glad.h>
 
-struct shaderType {
+struct ShaderType 
+{
 	//shaderType(shaderType& shaderT) : type(shaderT.type), name(shaderT.name) {}
-	shaderType() : type(-1), name("") {}
-	shaderType(unsigned int type, std::string name) : type(type), name(name){}
-	unsigned int type;
+	ShaderType() : typeID(-1), name("") 
+	{
+	}
+	ShaderType(unsigned int type, std::string name) : typeID(type), name(name)\
+	{
+	}
+	unsigned int typeID;
 	std::string name;
 };
 
-bool checkCompileErrors(unsigned int shader, std::string type, std::string shaderName);
+ShaderType getShaderType(const char* path);
 std::string getShaderName(const char* shaderPath);
-shaderType getShaderType(const char* path);
+bool checkCompileErrors(unsigned int shader, std::string type, std::string shaderName);
+
 
 class BaseShader
 {
 public:
-	BaseShader(const char * shaderPath);
+	BaseShader(const char * shaderPathChar);
 	virtual ~BaseShader();
-	std::string getName() {
-		return getShaderName(path.c_str());
+
+	std::string getName() 
+	{
+		return getShaderName(shaderPath.c_str());
 	}
-	shaderType getType() {
-		return shadType;
+	unsigned int getShad()
+	{
+		return shaderID;
 	}
-	unsigned int getShad() {
-		return shad;
+	ShaderType getType() 
+	{
+		return shaderTypeID;
 	}
+
 private:
 	std::string loadShaderFromFile(const char* shaderPath);
 
-	std::string path;
+	std::string shaderPath;
 
 
-	unsigned int shad;
-	shaderType shadType;
+	unsigned int shaderID;
+	ShaderType shaderTypeID;
 };
 

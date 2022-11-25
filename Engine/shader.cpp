@@ -1,21 +1,21 @@
 #include "Shader.hpp"
 
-Shader::Shader(std::string name) : name(name)
+Shader::Shader(std::string name) : shaderName(name)
 {
-	linked = false;
-	isCompute = false;
-	ID = glCreateProgram();
+	isLinked = false;
+	isComputeShader = false;
+	id = glCreateProgram();
 }
 
 Shader::~Shader() {
-	glDeleteProgram(ID);
+	glDeleteProgram(id);
 }
 
-Shader::Shader(std::string name, const char * computeShaderPath) : name(name)
+Shader::Shader(std::string name, const char * computeShaderPath) : shaderName(name)
 {
-	linked = false;
-	isCompute = false;
-	ID = glCreateProgram();
+	isLinked = false;
+	isComputeShader = false;
+	id = glCreateProgram();
 
 	this->attachShader(BaseShader(computeShaderPath));
 	this->linkPrograms();
@@ -24,10 +24,10 @@ Shader::Shader(std::string name, const char * computeShaderPath) : name(name)
 
 Shader * Shader::attachShader(BaseShader s)
 {
-	if (!isCompute) {
-		glAttachShader(ID, s.getShad());
+	if (!isComputeShader) {
+		glAttachShader(id, s.getShad());
 		if (s.getName() == "COMPUTE")
-			isCompute = true;
+			isComputeShader = true;
 		this->shaders.push_back(s.getShad());
 	}
 	else {
@@ -39,26 +39,26 @@ Shader * Shader::attachShader(BaseShader s)
 
 void Shader::linkPrograms()
 {
-	glLinkProgram(ID);
+	glLinkProgram(id);
 
-	if (checkCompileErrors(ID, "PROGRAM", "")) {
-		linked = true;
-		std::cout << "PROGRAM " << name << " CORRECTLY LINKED" << std::endl;
+	if (checkCompileErrors(id, "PROGRAM", "")) {
+		isLinked = true;
+		std::cout << "PROGRAM " << shaderName << " CORRECTLY LINKED" << std::endl;
 		while (!shaders.empty()) {
 			glDeleteShader(shaders.back());
 			shaders.pop_back();
 		}
 	}
 	else {
-		std::cout << "ERROR WHILE LINKING TO " << name << " PROGRAM" << std::endl;
+		std::cout << "ERROR WHILE LINKING TO " << shaderName << " PROGRAM" << std::endl;
 	}
 }
 
 
 void Shader::use()
 {
-	if (linked)
-		glUseProgram(ID);
+	if (isLinked)
+		glUseProgram(id);
 	else {
 		std::cout << "PROGRAMS NOT LINKED!" << std::endl;
 	}
@@ -67,38 +67,38 @@ void Shader::use()
 // ------------------------------------------------------------------------
 void Shader::setBool(const std::string &name, bool value) const
 {
-	glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+	glUniform1i(glGetUniformLocation(id, name.c_str()), (int)value);
 }
 // ------------------------------------------------------------------------
 void Shader::setInt(const std::string &name, int value) const
 {
-	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+	glUniform1i(glGetUniformLocation(id, name.c_str()), value);
 }
 // ------------------------------------------------------------------------
 void Shader::setFloat(const std::string &name, float value) const
 {
-	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+	glUniform1f(glGetUniformLocation(id, name.c_str()), value);
 }
 void Shader::setVec2(const std::string &name, glm::vec2 vector) const
 {
-	unsigned int location = glGetUniformLocation(ID, name.c_str());
+	unsigned int location = glGetUniformLocation(id, name.c_str());
 	glUniform2fv(location, 1, glm::value_ptr(vector));
 }
 void Shader::setVec3(const std::string &name, glm::vec3 vector) const
 {
-	unsigned int location = glGetUniformLocation(ID, name.c_str());
+	unsigned int location = glGetUniformLocation(id, name.c_str());
 	glUniform3fv(location, 1, glm::value_ptr(vector));
 }
 
 void Shader::setVec4(const std::string &name, glm::vec4 vector) const
 {
-	unsigned int location = glGetUniformLocation(ID, name.c_str());
+	unsigned int location = glGetUniformLocation(id, name.c_str());
 	glUniform4fv(location, 1, glm::value_ptr(vector));
 }
 
 void Shader::setMat4(const std::string &name, glm::mat4 matrix) const
 {
-	unsigned int mat = glGetUniformLocation(ID, name.c_str());
+	unsigned int mat = glGetUniformLocation(id, name.c_str());
 	glUniformMatrix4fv(mat, 1, false, glm::value_ptr(matrix));
 }
 

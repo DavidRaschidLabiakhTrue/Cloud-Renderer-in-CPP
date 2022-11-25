@@ -195,6 +195,7 @@
     <ClInclude Include="Include\imgui\imstb_truetype.h" />
     <ClInclude Include="Include\stb\stb_image.h" />
     <ClInclude Include="Include\stb\stb_image_write.h" />
+    <ClInclude Include="Main.hpp" />
     <ClInclude Include="Renderable\Drawable.hpp" />
     <ClInclude Include="Renderable\DrawableClouds.hpp" />
     <ClInclude Include="Renderable\GUI.hpp" />

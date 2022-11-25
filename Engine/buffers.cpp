@@ -1,22 +1,26 @@
 #include "buffers.hpp"
 #include "Texture.hpp"
-void bindFrameBuffer(int frameBuffer, int width, int height) {
-	glBindTexture(GL_TEXTURE_2D, 0);//To make sure the texture isn't bound
+void bindFrameBuffer(int frameBuffer, int width, int height) 
+{
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glViewport(0, 0, width, height);
 }
 
-void unbindCurrentFrameBuffer(int scrWidth, int scrHeight) {//call to switch to default frame buffer
+void unbindCurrentFrameBuffer(int scrWidth, int scrHeight) 
+{
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, scrWidth, scrHeight);
 }
 
-void unbindCurrentFrameBuffer() {
+void unbindCurrentFrameBuffer() 
+{
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, Window::ScreenWidth, Window::ScreenHeight);
 }
 
-unsigned int createFrameBuffer() {
+unsigned int createFrameBuffer() 
+{
 	unsigned int frameBuffer;
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
@@ -25,55 +29,50 @@ unsigned int createFrameBuffer() {
 	return frameBuffer;
 }
 
-unsigned int createTextureAttachment(int width, int height) {
+unsigned int createTextureAttachment(int width, int height) 
+{
 	unsigned int texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
 	glGenerateMipmap(GL_TEXTURE_2D);
-
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 
 	return texture;
 }
 
-unsigned int * createColorAttachments(int width, int height, unsigned int nColorAttachments) {
+unsigned int * createColorAttachments(int width, int height, unsigned int nColorAttachments) 
+{
 	unsigned int * colorAttachments = new unsigned int[nColorAttachments];
 	glGenTextures(nColorAttachments, colorAttachments);
-
-	for (unsigned int i = 0; i < nColorAttachments; i++) {
+	for (unsigned int i = 0; i < nColorAttachments; i++) 
+	{
 		glBindTexture(GL_TEXTURE_2D, colorAttachments[i]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
 		glGenerateMipmap(GL_TEXTURE_2D);
-
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, colorAttachments[i], 0);
 	}
 	return colorAttachments;
 }
 
-unsigned int createDepthTextureAttachment(int width, int height) {
+unsigned int createDepthTextureAttachment(int width, int height) 
+{
 	unsigned int texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture, 0);
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture, 0);
 	return texture;
 }
 
-unsigned int createDepthBufferAttachment(int width, int height) {
+unsigned int createDepthBufferAttachment(int width, int height) 
+{
 	unsigned int depthBuffer;
 	glGenRenderbuffers(1, &depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
@@ -82,7 +81,8 @@ unsigned int createDepthBufferAttachment(int width, int height) {
 	return depthBuffer;
 }
 
-unsigned int createRenderBufferAttachment(int width, int height) {
+unsigned int createRenderBufferAttachment(int width, int height) 
+{
 	unsigned int rbo;
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
@@ -94,7 +94,8 @@ unsigned int createRenderBufferAttachment(int width, int height) {
 
 
 
-FrameBufferObject::FrameBufferObject(int W_, int H_) {
+FrameBufferObject::FrameBufferObject(int W_, int H_) 
+{
 	this->W = W_;
 	this->H = H_;
 	this->fbo = createFrameBuffer();
@@ -106,7 +107,8 @@ FrameBufferObject::FrameBufferObject(int W_, int H_) {
 	nColorAttachments = 1;
 }
 
-FrameBufferObject::FrameBufferObject(int W_, int H_, const int nColorAttachments) {
+FrameBufferObject::FrameBufferObject(int W_, int H_, const int nColorAttachments) 
+{
 	this->W = W_;
 	this->H = H_;
 	this->fbo = createFrameBuffer();
@@ -117,7 +119,8 @@ FrameBufferObject::FrameBufferObject(int W_, int H_, const int nColorAttachments
 	this->nColorAttachments = nColorAttachments;
 
 	unsigned int * colorAttachmentsFlag = new unsigned int[nColorAttachments];
-	for (unsigned int i = 0; i < nColorAttachments; i++) {
+	for (unsigned int i = 0; i < nColorAttachments; i++) 
+	{
 		colorAttachmentsFlag[i] = GL_COLOR_ATTACHMENT0 + i;
 	}
 	glDrawBuffers(nColorAttachments, colorAttachmentsFlag);
@@ -125,12 +128,15 @@ FrameBufferObject::FrameBufferObject(int W_, int H_, const int nColorAttachments
 }
 
 
-void FrameBufferObject::bind() {
+void FrameBufferObject::bind() 
+{
 	bindFrameBuffer(this->fbo, this->W, this->H);
 }
 
-unsigned int FrameBufferObject::getColorAttachmentTex(int i) {
-	if (i < 0 || i > nColorAttachments) {
+unsigned int FrameBufferObject::getColorAttachmentTex(int i) 
+{
+	if (i < 0 || i > nColorAttachments) 
+	{
 		std::cout << "COLOR ATTACHMENT OUT OF RANGE" << std::endl;
 		return 0;
 	}
@@ -139,18 +145,22 @@ unsigned int FrameBufferObject::getColorAttachmentTex(int i) {
 
 TextureSet::TextureSet(int W, int H, int num)
 {
-	if (W > 0 && H > 0 && num > 0) {
+	if (W > 0 && H > 0 && num > 0) 
+	{
 		nTextures = num;
 		texture = new unsigned int[num];
-		for (int i = 0; i < num; ++i) {
+		for (int i = 0; i < num; ++i) 
+		{
 			texture[i] = generateTexture2D(W, H);
 		}
 	}
 }
 
 
-unsigned int TextureSet::getColorAttachmentTex(int i) {
-	if (i < 0 || i > nTextures) {
+unsigned int TextureSet::getColorAttachmentTex(int i) 
+{
+	if (i < 0 || i > nTextures) 
+	{
 		std::cout << "COLOR ATTACHMENT OUT OF RANGE" << std::endl;
 		return 0;
 	}
@@ -165,5 +175,8 @@ void TextureSet::bindTexture(int i, int unit)
 void TextureSet::bind()
 {
 	for (int i = 0; i < nTextures; ++i)
+	{
 		bindTexture2D(texture[i], i);
+	}
+		
 }

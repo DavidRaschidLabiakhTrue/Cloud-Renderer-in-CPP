@@ -191,5 +191,8 @@
     <ClInclude Include="Include\stb\stb_image_write.h">
       <Filter>BuildExternal</Filter>
     </ClInclude>
+    <ClInclude Include="Main.hpp">
+      <Filter>Main</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

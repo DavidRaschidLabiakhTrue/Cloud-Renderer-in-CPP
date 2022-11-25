@@ -92,7 +92,7 @@ void Skybox::draw() {
 	shader.use();
 
 	shader.setVec2("resolution", glm::vec2(Window::ScreenWidth, Window::ScreenHeight));
-	shader.setMat4("inv_proj", glm::inverse(s->projMatrix));
+	shader.setMat4("inv_proj", glm::inverse(s->proj));
 	shader.setMat4("inv_view", glm::inverse(s->cam->GetViewMatrix()));
 	
 	shader.setVec3("lightDirection", glm::normalize(s->lightPos - s->cam->Position));

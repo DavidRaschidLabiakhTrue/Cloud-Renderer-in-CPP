@@ -26,7 +26,7 @@ void VolumetricClouds::draw()
 
 	cloudData.setVec2("iResolution", glm::vec2(SCR_WIDTH, SCR_HEIGHT));
 	cloudData.setFloat("iTime", glfwGetTime());
-	cloudData.setMat4("inv_proj", glm::inverse(s->projMatrix));
+	cloudData.setMat4("inv_proj", glm::inverse(s->proj));
 	cloudData.setMat4("inv_view", glm::inverse(s->cam->GetViewMatrix()));
 	cloudData.setVec3("cameraPosition", s->cam->Position);
 	cloudData.setFloat("FOV", s->cam->Zoom);
@@ -52,7 +52,7 @@ void VolumetricClouds::draw()
 	cloudData.setVec3("skyColorTop", model->sky->skyColorTop);
 	cloudData.setVec3("skyColorBottom", model->sky->skyColorBottom);
 
-	glm::mat4 vp = s->projMatrix*s->cam->GetViewMatrix();
+	glm::mat4 vp = s->proj*s->cam->GetViewMatrix();
 	cloudData.setMat4("invViewProj", glm::inverse(vp));
 	cloudData.setMat4("gVP", vp);
 

@@ -13,31 +13,38 @@
 #include "BaseShader.hpp"
 
 
+typedef std::list<unsigned int> ShaderList;
+
 class Shader
 {
-public:
-	Shader(std::string name);
-	Shader(std::string name, const char * computeShader);
-	Shader * attachShader(BaseShader s);
-	void linkPrograms();
+	public:
+		Shader(std::string name);
+		Shader(std::string name, const char * computeShader);
+		Shader * attachShader(BaseShader s);
+		void linkPrograms();
 
-	virtual ~Shader();
-	void use();
-	void setBool(const std::string &name, bool value) const;
-	void setInt(const std::string &name, int value) const;
-	void setFloat(const std::string &name, float value) const;
-	void setVec2(const std::string &name, glm::vec2 vector) const;
-	void setVec3(const std::string &name, glm::vec3 vector) const;
-	void setVec4(const std::string &name, glm::vec4 vector) const;
-	void setMat4(const std::string &name, glm::mat4 matrix) const;
-	void setSampler2D(const std::string &name, unsigned int texture, int id) const;
-	void setSampler3D(const std::string &name, unsigned int texture, int id) const;
+		virtual ~Shader();
+		void use();
 
-protected:
-	unsigned int ID;
+		// standard GLSL setters
+		void setBool(const std::string &name, bool value) const;
+		void setInt(const std::string &name, int value) const;
+		void setFloat(const std::string &name, float value) const;
+		void setVec2(const std::string &name, glm::vec2 vector) const;
+		void setVec3(const std::string &name, glm::vec3 vector) const;
+		void setVec4(const std::string &name, glm::vec4 vector) const;
+		void setMat4(const std::string &name, glm::mat4 matrix) const;
+		void setSampler2D(const std::string &name, unsigned int texture, int id) const;
+		void setSampler3D(const std::string &name, unsigned int texture, int id) const;
 
-	bool linked, isCompute;
-	std::list<unsigned int> shaders;
-	std::string name;
+	protected:
+		unsigned int id;
+
+		bool isLinked;
+		bool isComputeShader;
+
+
+		ShaderList shaders;
+		std::string shaderName;
 };
 

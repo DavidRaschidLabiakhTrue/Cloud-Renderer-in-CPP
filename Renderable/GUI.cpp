@@ -20,7 +20,7 @@ void GUI::draw()
 {
 		Scene& scene = *this->scene;
 
-		for (Drawable* obj : subscribers) 
+		for (Drawable* obj : Attachments) 
 		{
 			obj->setGui();
 		}
@@ -33,17 +33,8 @@ void GUI::draw()
 			scene.lightDir.y = saturate(scene.lightDir.y);
 
 		}
-		// ImGui::InputFloat3("Camera Position", &(scene.cam->Position[0]), 7); // hiding functionality - Do not enable - David
-		// ImGui::ColorEdit3("Light color", (float*)&scene.lightColor); // hiding functionality - David
-
-
-		//ImGui::ColorEdit3("Fog color", (float*)&scene.fogColor);
 		ImGui::SliderFloat("Camera speed", &scene.cam->MovementSpeed, 0.0, SPEED*3.0);
 
-
-
-
-		// ImGui::Checkbox("Wireframe mode", &scene.wireframe);
 
 		if (ImGui::Button("Generate seed"))
 		{
@@ -53,27 +44,13 @@ void GUI::draw()
 			std::uniform_real_distribution<> dis(.0, 100.);
 			scene.seed = vec3(dis(gen), dis(gen), dis(gen));
 		}
-			
-		//ImGui::SameLine();
-		//ImGui::Text("Generate a new seed");
+
 		ImGui::SameLine();
 		if (ImGui::Button("Use default seed"))
+		{
 			scene.seed = glm::vec3(0.0, 0.0, 0.0);
-
-		/*ImGui::SameLine();
-		if (ImGui::Button("Default Preset")) {
-			volumetricClouds.DefaultPreset();
-			lightDir.y = 0.5;
-		}*/
-		//ImGui::SameLine();
-		/*if (ImGui::Button("Sunset Preset 1")) {
-			skybox.SunsetPreset();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Sunset Preset 2")) {
-			skybox.SunsetPreset1();
-		}*/
-
+			
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 	
@@ -90,9 +67,9 @@ void GUI::update()
 	ImGui::NewFrame();
 }
 
-GUI & GUI::subscribe(Drawable * subscriber)
+GUI & GUI::attach(Drawable * subscriber)
 {
-	subscribers.push_back(subscriber);
+	Attachments.push_back(subscriber);
 
 	return *this;
 }

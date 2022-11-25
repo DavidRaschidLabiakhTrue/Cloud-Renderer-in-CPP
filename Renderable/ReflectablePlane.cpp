@@ -94,11 +94,12 @@ void ReflectablePlane::draw(){
 
 	drawFog = !se->wireframe;
 
-	if (up != 0.0f) {
+	if (up != 0.0f) 
+	{
 		glEnable(GL_CLIP_DISTANCE0);
 	}
 	glm::mat4 gWorld = modelMatrix;
-	glm::mat4 gVP = se->projMatrix * se->cam->GetViewMatrix();
+	glm::mat4 gVP = se->proj * se->cam->GetViewMatrix();
 
 	shad->use();
 	shad->setVec3("gEyeWorldPos", se->cam->Position);

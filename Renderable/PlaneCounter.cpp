@@ -61,7 +61,7 @@ void PlaneCounter::draw()
 	this->setHeight(height);
 
 	shader->setMat4("modelMatrix", modelMatrix);
-	shader->setMat4("gVP", se->projMatrix*se->cam->GetViewMatrix());
+	shader->setMat4("gVP", se->proj*se->cam->GetViewMatrix());
 
 	shader->setVec3("u_LightColor", se->lightColor);
 	shader->setVec3("u_LightPosition", se->lightPos);

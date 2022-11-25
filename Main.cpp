@@ -1,78 +1,34 @@
-﻿#ifndef GLAD_H
-#define GLAD_H
-#include <glad/glad.h>
-#endif
-#include <GLFW/glfw3.h>
+﻿#include "Main.hpp"
 
-#include "Engine/Window.hpp"
-#include "Engine/Shader.hpp"
-#include "Engine/PostProcess.hpp"
-#include "Engine/Texture.hpp"
-
-#include "Renderable/VolumetricClouds.hpp"
-#include "Renderable/ReflectablePlane.hpp"
-#include "Renderable/Skybox.hpp"
-#include "Renderable/PlaneCounter.hpp"
-#include "Renderable/DrawableClouds.hpp"
-
-#include <Camera.hpp>
-#include "Include/stb/stb_image.h"
-
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/random.hpp>
-
-
-#include "Renderable/Scene.hpp"
-#include "Renderable/Drawable.hpp"
-#include "Renderable/GUI.hpp"
-
-#include <iostream>
-#include <vector>
-#include <functional>
-
-#include "../imgui/imgui.h"
-#include "../imgui/imgui_impl_glfw.h"
-#include "../imgui/imgui_impl_opengl3.h"
-
-int main()
+Main::Main() : camera(vec3(0.0f, 800.0f, 0.0f)) , window(), gui(window), PostProcessing("shaders/post_processing.frag")
 {
+	window.camera = &camera; //Window class needs camera address to perform input handling
+}
 
-	// camera and window setup
-	glm::vec3 startPosition(0.0f, 800.0f, 0.0f);
-	Camera camera(startPosition);
+Main::~Main()
+{
+}
 
-
-	Window window(1600, 900); // David - Don't expect resizing
+int Main::run()
+{
 	if (window.successfulLoad == false)
 	{
 		return -1; // failure
 	}
-		
 
-	
-	window.camera = &camera; //Window class needs camera address to perform input handling
-
-	GUI gui(window);
-
-	glm::vec3 fogColor(0.5,0.6,0.7);
+	glm::vec3 fogColor(0.5, 0.6, 0.7);
 	glm::vec3 lightColor(255, 255, 230);
 	lightColor /= 255.0;
 
 	FrameBufferObject SceneFBO(Window::ScreenWidth, Window::ScreenHeight);
 	glm::vec3 lightPosition, seed;
-	glm::mat4 proj = glm::perspective(glm::radians(camera.Zoom), (float)Window::ScreenWidth / (float)Window::ScreenHeight, 5.f, 10000000.0f);
+	proj = glm::perspective(glm::radians(camera.Zoom), (float)Window::ScreenWidth / (float)Window::ScreenHeight, 5.f, 10000000.0f);
 	glm::vec3 lightDir = glm::vec3(-.5, 0.5, 1.0);
 
 	//Every scene object need these informations to be rendered
 	Scene scene;
 
-	scene.loadLight(lightPosition, lightColor, lightDir);
-	scene.loadAttributes(fogColor, seed);
-	scene.loadCameraData(camera, proj);
-	scene.loadFrameBuffer(SceneFBO);
+	scene.loadLight(lightPosition, lightColor, lightDir).loadAttributes(fogColor, seed).loadCameraData(camera, proj).loadFrameBuffer(SceneFBO);
 
 
 
@@ -82,7 +38,7 @@ int main()
 	int gridLength = 150;
 	ReflectablePlane reflectablePlane(150);
 
-	
+
 	PlaneCounter planeCounter(glm::vec2(0.0, 0.0), gridLength, 0);
 
 
@@ -90,18 +46,17 @@ int main()
 
 	reflectablePlane.setSkybox(skybox);
 	DrawableClouds cloudsModel(&scene, &skybox);
-	
+
 	VolumetricClouds volumetricClouds(Window::ScreenWidth, Window::ScreenHeight, &cloudsModel);
 	VolumetricClouds reflectionVolumetricClouds(1280, 720, &cloudsModel); // (expected) lower resolution framebuffers, so the rendering will be faster
-	
-	gui.subscribe(&cloudsModel).subscribe(&skybox);
 
-	PostProcessor PostProcessing("shaders/post_processing.frag");
+	gui.attach(&cloudsModel).attach(&skybox);
+
 
 	while (window.continueLoop())
 	{
 		scene.lightDir = glm::normalize(scene.lightDir);
-		scene.lightPos = scene.lightDir*1e6f + camera.Position;
+		scene.lightPos = scene.lightDir * 1e6f + camera.Position;
 
 		// input
 		float frametime = 1 / ImGui::GetIO().Framerate;
@@ -117,103 +72,125 @@ int main()
 
 		SceneFBO.bind();
 
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-
-		glClearColor(.3, .3, .3, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		clear1();
 
 
-		// toggle/untoggle wireframe mode
-		if (scene.wireframe) {
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}
-		else {
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
 
-		// Camera (View Matrix) setting
-		glm::mat4 view = scene.cam->GetViewMatrix();
-		scene.projMatrix = glm::perspective(glm::radians(camera.Zoom), (float)Window::ScreenWidth / (float)Window::ScreenHeight, 5.f,10000000.0f);
+		view = scene.cam->GetViewMatrix();
+		scene.proj = glm::perspective(glm::radians(camera.Zoom), (float)Window::ScreenWidth / (float)Window::ScreenHeight, 5.f, 10000000.0f);
 
-		
-		//draw to water reflection buffer object
+
+
 		planeCounter.bindReflectionFBO();
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		scene.cam->invertPitch();
-		scene.cam->Position.y -= 2 * (scene.cam->Position.y - planeCounter.getHeight());
-		
+		clear2();
+
+		scene.updateCameraAttributes(planeCounter.getHeight());
+
+
 		reflectablePlane.up = 1.0;
 		reflectablePlane.draw();
 		FrameBufferObject const& reflFBO = planeCounter.getReflectionFBO();
-		
+
 		PostProcessor::disableTests();
 
 		reflectionVolumetricClouds.draw();
 		planeCounter.bindReflectionFBO(); //rebind refl buffer; reflVolumetricClouds unbound it
 
-		
-		Shader& post = PostProcessing.getShader();
-		post.use();
-		post.setVec2("resolution", glm::vec2(1280, 720));
-		post.setSampler2D("screenTexture", reflFBO.tex, 0);
-		post.setSampler2D("depthTex", reflFBO.depthTex, 2);
-		post.setSampler2D("cloudTEX", reflectionVolumetricClouds.getCloudsRawTexture(), 1);
-		PostProcessing.draw();
+		postProcess1(reflFBO, reflectionVolumetricClouds);
 
-		PostProcessor::enableTests();
+
 		
+
 		scene.cam->invertPitch();
 		scene.cam->Position.y += 2 * abs(scene.cam->Position.y - planeCounter.getHeight());
-		
+
 		//draw to water refraction buffer object
 		planeCounter.bindRefractionFBO();
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
+
+		clear3();
 
 		reflectablePlane.up = -1.0;
 		reflectablePlane.draw();
 
-		// draw terrain and water
+		
 		scene.sceneFBO->bind();
 		reflectablePlane.draw();
 		planeCounter.draw();
 
-		//disable test for quad rendering
+		
 		PostProcessor::disableTests();
 
 		volumetricClouds.draw();
 		skybox.draw();
 
-		// blend volumetric clouds rendering with terrain and apply some post process
-		unbindCurrentFrameBuffer(); // on-screen drawing
-		//Shader& post = PostProcessing.getShader();
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-		post.use();
-		post.setVec2("resolution", glm::vec2(Window::ScreenWidth, Window::ScreenHeight));
-		post.setVec3("cameraPosition", scene.cam->Position);
-		post.setSampler2D("screenTexture", SceneFBO.tex, 0);
-		post.setSampler2D("cloudTEX", volumetricClouds.getCloudsTexture(), 1);
-		post.setSampler2D("depthTex", SceneFBO.depthTex, 2);
-		post.setSampler2D("cloudDistance", volumetricClouds.getCloudsTexture(VolumetricClouds::cloudDistance), 3);
-
-		post.setBool("wireframe", scene.wireframe);
-
-		post.setMat4("VP", scene.projMatrix * view);
-		PostProcessing.draw();
-
-
-
-
+		postProcess2(scene, SceneFBO, volumetricClouds);
 		gui.draw();
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		window.swapBuffersAndPollEvents();
 	}
+	return 0;
 }
+
+
+
+void Main::postProcess1(const FrameBufferObject& fbo, VolumetricClouds& volumetricClouds)
+{
+	Shader& post = PostProcessing.getShader();
+	post.use();
+	post.setVec2("resolution", glm::vec2(1280, 720));
+	post.setSampler2D("screenTexture", fbo.tex, 0);
+	post.setSampler2D("depthTex", fbo.depthTex, 2);
+	post.setSampler2D("cloudTEX", volumetricClouds.getCloudsRawTexture(), 1);
+	PostProcessing.draw();
+	PostProcessor::enableTests();
+}
+
+void Main::postProcess2(const Scene& scene, const FrameBufferObject& fbo, VolumetricClouds& volumetricClouds)
+{
+	unbindCurrentFrameBuffer();
+	Shader& post = PostProcessing.getShader();
+	post.use();
+	post.setVec2("resolution", glm::vec2(Window::ScreenWidth, Window::ScreenHeight));
+	post.setVec3("cameraPosition", scene.cam->Position);
+	post.setSampler2D("screenTexture", fbo.tex, 0);
+	post.setSampler2D("cloudTEX", volumetricClouds.getCloudsTexture(), 1);
+	post.setSampler2D("depthTex", fbo.depthTex, 2);
+	post.setSampler2D("cloudDistance", volumetricClouds.getCloudsTexture(VolumetricClouds::cloudDistance), 3);
+	post.setMat4("VP", scene.proj * view);
+	PostProcessing.draw();
+}
+
+void Main::clear1()
+{
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glClearColor(.3, .3, .3, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void Main::clear2()
+{
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void Main::clear3()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+}
+
+int main()
+{
+	Main app;
+
+	return app.run();
+	
+}
+
+

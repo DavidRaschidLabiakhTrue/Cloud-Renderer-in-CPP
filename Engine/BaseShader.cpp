@@ -4,17 +4,17 @@
 #include <sstream>
 
 
-BaseShader::BaseShader(const char * shaderPath)
+BaseShader::BaseShader(const char * shaderPathChar)
 {
-	path = std::string(shaderPath);
-	std::string shaderCode = loadShaderFromFile(shaderPath);
+	shaderPath = std::string(shaderPathChar);
+	std::string shaderCode = loadShaderFromFile(shaderPathChar);
 	const char * shaderString = shaderCode.c_str();
 
-	shadType = getShaderType(shaderPath);
-	shad = glCreateShader(shadType.type);
-	glShaderSource(shad, 1, &shaderString, NULL);
-	glCompileShader(shad);
-	checkCompileErrors(shad, shadType.name.c_str(), getShaderName(shaderPath));
+	shaderTypeID = getShaderType(shaderPathChar);
+	shaderID = glCreateShader(shaderTypeID.typeID);
+	glShaderSource(shaderID, 1, &shaderString, NULL);
+	glCompileShader(shaderID);
+	checkCompileErrors(shaderID, shaderTypeID.name.c_str(), getShaderName(shaderPathChar));
 
 }
 
@@ -81,7 +81,7 @@ std::string getShaderName(const char* path) {
 	}
 	return pathstr;
 }
-shaderType getShaderType(const char* path) {
+ShaderType getShaderType(const char* path) {
 	std::string type = getShaderName(path);
 	const size_t last_slash_idx = type.find_last_of(".");
 	if (std::string::npos != last_slash_idx)
@@ -89,17 +89,17 @@ shaderType getShaderType(const char* path) {
 		type.erase(0, last_slash_idx + 1);
 	}
 	if (type == "vert")
-		return shaderType(GL_VERTEX_SHADER, "VERTEX");
+		return ShaderType(GL_VERTEX_SHADER, "VERTEX");
 	if (type == "frag")
-		return shaderType(GL_FRAGMENT_SHADER, "FRAGMENT");
+		return ShaderType(GL_FRAGMENT_SHADER, "FRAGMENT");
 	if (type == "tes")
-		return shaderType(GL_TESS_EVALUATION_SHADER, "TESS_EVALUATION");
+		return ShaderType(GL_TESS_EVALUATION_SHADER, "TESS_EVALUATION");
 	if (type == "tcs")
-		return shaderType(GL_TESS_CONTROL_SHADER, "TESS_CONTROL");
+		return ShaderType(GL_TESS_CONTROL_SHADER, "TESS_CONTROL");
 	if (type == "geom")
-		return shaderType(GL_GEOMETRY_SHADER, "GEOMETRY");
+		return ShaderType(GL_GEOMETRY_SHADER, "GEOMETRY");
 	if (type == "comp")
-		return shaderType(GL_COMPUTE_SHADER, "COMPUTE") ;
+		return ShaderType(GL_COMPUTE_SHADER, "COMPUTE") ;
 }
 
 
