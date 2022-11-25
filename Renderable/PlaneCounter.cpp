@@ -19,7 +19,7 @@ PlaneCounter::PlaneCounter(glm::vec2 position, float scale, float height): scale
 	reflectionFBO = new FrameBufferObject(FBOw, FBOh);
 	refractionFBO = new FrameBufferObject(FBOw, FBOh);
 
-	initializePlaneVAO(2, ReflectablePlane::tileW, &planeVAO, &planeVBO, &planeEBO);
+	initializePlaneVAO(2, ReflectablePlane::tileW, &vao, &vbo, &ebo);
 }
 
 void PlaneCounter::bindReflectionFBO() 
@@ -32,13 +32,13 @@ void PlaneCounter::bindRefractionFBO()
 	refractionFBO->bind();
 }
 
-const int res = 2;
+const int planeResolution = 2;
 
 void PlaneCounter::drawVertices() 
 {
-	glBindVertexArray(planeVAO);
+	glBindVertexArray(vao);
 	shader->use();
-	glDrawElements(GL_TRIANGLES, (res - 1)*(res - 1) * 2 * 3, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, (planeResolution - 1)*(planeResolution - 1) * 2 * 3, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 

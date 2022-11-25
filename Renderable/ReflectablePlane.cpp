@@ -6,7 +6,14 @@
 
 #include "Skybox.hpp"
 
-bool ReflectablePlane::drawFog = true;
+bool ReflectablePlane::drawFog = false;
+
+
+
+using glm::vec2;
+
+
+
 
 float sign(float x) 
 {
@@ -18,67 +25,69 @@ float sign(float x)
 
 ReflectablePlane::ReflectablePlane(int gl)
 {
+	modelMatrix = glm::mat4(1.0f);;
 
 
-	glm::mat4 id;
-	glm::mat4 scaleMatrix = glm::scale(id, glm::vec3(1.0, 0.0, 1.0));
-	glm::mat4 positionMatrix = glm::translate(id, glm::vec3(0., 0.0, 0.));
-	modelMatrix = positionMatrix;
 
-	octaves = 0;
-	frequency = 0;
-	grassCoverage = 0;
-	tessMultiplier = 0;
-
-	fogFalloff = 0;
-
+	// IGNORE DEAD
+	planeOctaves = 0;
+	planeFrequencyFactor = 0;
+	planeCoverage = 0;
+	planeFractureMultiplier = 0;
+	planeFallOff = 0;
 	posBuffer = 0;
+	// IGNORE DEAD
 
-	shad = new Shader("TerrainTessShader");
-	shad->attachShader("shaders/terrain.vert")->attachShader("shaders/terrain.frag")->linkPrograms();
+	shader = new Shader("Reflectable Plane");
+	shader->attachShader("shaders/ReflectablePlane.vert")->attachShader("shaders/ReflectablePlane.frag")->linkPrograms();
 
-	this->gridLength = gl + (gl + 1) % 2; //ensure gridLength is odd
-
-
-	res = 4;
-	initializePlaneVAO(res, tileW, &planeVAO, &planeVBO, &planeEBO);
+	this->planeGridLength = gl + (gl + 1) % 2; // gridLength must be odd
 
 
+	planeResolution = 4;
+	initializePlaneVAO(planeResolution, tileW, &vao, &vbo, &ebo);
 
-	positionVec.resize(gridLength*gridLength);
-	generateTileGrid(glm::vec2(0.0,0.0));
+
+
+	positionVec.resize(planeGridLength*planeGridLength);
+	generateTileGrid(vec2(0.0,0.0));
 
 	setPositionsArray(positionVec);
 
-	rockColor = glm::vec4(120, 105, 75, 255)*1.5f / 255.f;
-	power = .2;
+	planeColor = glm::vec4(120, 105, 75, 255)*1.5f / 255.f;
+	planeFracturePower = .2;
 }
 
-void ReflectablePlane::generateTileGrid(glm::vec2 offset)
+void ReflectablePlane::generateTileGrid(vec2 offset)
 {
 	float sc = tileW;
 
-	glm::vec2 I = glm::vec2(1, 0)*sc;
-	glm::vec2 J = glm::vec2(0, 1)*sc;
+	vec2 I = vec2(1, 0)*sc;
+	vec2 J = vec2(0, 1)*sc;
 
-	for (int i = 0; i < gridLength; i++) {
-		for (int j = 0; j < gridLength; j++) {
-			glm::vec2 pos = (float)(j - gridLength / 2)*glm::vec2(I) + (float)(i - gridLength / 2)*glm::vec2(J);
+	for (int i = 0; i < planeGridLength; i++) 
+	{
+		for (int j = 0; j < planeGridLength; j++) 
+		{
+			vec2 pos = (float)(j - planeGridLength / 2)*vec2(I) + (float)(i - planeGridLength / 2)*vec2(J);
 			setPos(i, j, pos + offset);
 		}
 	}
 }
 
-void ReflectablePlane::deleteBuffer(){
+void ReflectablePlane::deleteBuffer()
+{
 	glDeleteBuffers(1, &posBuffer);
 	posBuffer = 0;
 }
 
-bool ReflectablePlane::getWhichTileCameraIs(glm::vec2& result) {
+bool ReflectablePlane::getWhichTileCameraIs(vec2& result) 
+{
 
-	for (glm::vec2 p : positionVec) {
-		if (inTile(*(scene->cam), p)) {
-			//std::cout << "You're in Tile: " << p.x << ", " << p.y << std::endl;
+	for (vec2 p : positionVec) 
+	{
+		if (inTile(*(scene->cam), p)) 
+		{
 			result = p;
 			return true;
 		}
@@ -87,9 +96,8 @@ bool ReflectablePlane::getWhichTileCameraIs(glm::vec2& result) {
 }
 
 
-void ReflectablePlane::draw(){
-
-
+void ReflectablePlane::draw()
+{
 	Scene* se = Drawable::scene;
 
 	drawFog = !se->wireframe;
@@ -101,32 +109,31 @@ void ReflectablePlane::draw(){
 	glm::mat4 gWorld = modelMatrix;
 	glm::mat4 gVP = se->proj * se->cam->GetViewMatrix();
 
-	shad->use();
-	shad->setVec3("gEyeWorldPos", se->cam->cameraPosition);
-	shad->setMat4("gWorld", gWorld);
-	shad->setMat4("gVP", gVP);
-	shad->setFloat("gDispFactor", dispFactor);
+	shader->use();
+	shader->setVec3("gEyeWorldPos", se->cam->cameraPosition);
+	shader->setMat4("gWorld", gWorld);
+	shader->setMat4("gVP", gVP);
+	shader->setFloat("gDispFactor", planeDispersion);
 
-	float waterHeight = (waterPtr ? waterPtr->getModelMatrix()[3][1] : 100.0);
 	glm::vec4 clipPlane(0.0, 1.0, 0.0, -0);
-	shad->setVec4("clipPlane", clipPlane*up);
-	shad->setVec3("u_LightColor", se->lightColor);
-	shad->setVec3("u_LightPosition", se->lightPos);
-	shad->setVec3("u_ViewPosition", se->cam->cameraPosition);
-	shad->setVec3("fogColor", se->altFog);
-	shad->setVec3("rockColor", rockColor);
-	shad->setVec3("seed", se->seed);
+	shader->setVec4("clipPlane", clipPlane*up);
+	shader->setVec3("u_LightColor", se->lightColor);
+	shader->setVec3("u_LightPosition", se->lightPos);
+	shader->setVec3("u_ViewPosition", se->cam->cameraPosition);
+	shader->setVec3("fogColor", se->altFog);
+	shader->setVec3("rockColor", planeColor);
+	shader->setVec3("seed", se->seed);
 
-	shad->setInt("octaves", octaves);
-	shad->setFloat("freq", frequency);
-	shad->setFloat("u_grassCoverage", grassCoverage);
-	shad->setFloat("waterHeight", 0);
-	shad->setFloat("tessMultiplier", tessMultiplier);
-	shad->setFloat("fogFalloff", fogFalloff*1.e-6);
-	shad->setFloat("power", power);
+	//shader->setInt("octaves", planeOctaves);
+	//shader->setFloat("freq", planeFrequencyFactor);
+	//shader->setFloat("u_grassCoverage", planeCoverage);
+	//shader->setFloat("waterHeight", 0);
+	//shader->setFloat("tessMultiplier", planeFractureMultiplier);
+	//shader->setFloat("fogFalloff", planeFallOff*1.e-6);
+	shader->setFloat("power", planeFracturePower);
 
-	shad->setBool("normals", true);
-	shad->setBool("drawFog", ReflectablePlane::drawFog);
+	//shader->setBool("normals", true);
+	//shader->setBool("drawFog", ReflectablePlane::drawFog);
 
 
 	
@@ -145,57 +152,56 @@ void ReflectablePlane::setGui()
 
 }
 
-void ReflectablePlane::drawVertices(int nInstances) {
-	glBindVertexArray(planeVAO);
-	//shader.use();
-	shad->use();
-	glDrawElementsInstanced(GL_PATCHES, (res-1)*(res-1)*2*3, GL_UNSIGNED_INT, 0, nInstances); // DRAWS INSTANCED PLANES
+void ReflectablePlane::drawVertices(int nInstances) 
+{
+	glBindVertexArray(vao);
+	shader->use();
+	glDrawElementsInstanced(GL_PATCHES, (planeResolution-1)*(planeResolution-1)*2*3, GL_UNSIGNED_INT, 0, nInstances); // DRAWS INSTANCED PLANES
 	glBindVertexArray(0);
 }
 
-void ReflectablePlane::setPositionsArray(std::vector<glm::vec2> & pos) {
-	if (posBuffer) {
+void ReflectablePlane::setPositionsArray(std::vector<vec2> & pos) 
+{
+	if (posBuffer) 
+	{
 		this->deleteBuffer();
 	}
 
 	// vertex Buffer Object
 	glGenBuffers(1, &posBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, posBuffer);
-	glBufferData(GL_ARRAY_BUFFER, pos.size() * sizeof(glm::vec2), &pos[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, pos.size() * sizeof(vec2), &pos[0], GL_STATIC_DRAW);
 
-	glBindVertexArray(planeVAO);
+	glBindVertexArray(vao);
 	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(vec2), (void*)0);
 
 	glVertexAttribDivisor(3, 1);
 	glBindVertexArray(0);
 	
 }
 
-bool ReflectablePlane::inTile(const Camera camera, glm::vec2 pos) {
-	float camX = camera.cameraPosition.x;
-	float camY = camera.cameraPosition.z;
+bool ReflectablePlane::inTile(const Camera camera, vec2 pos) 
+{
+	using glm::vec2;
 
-	float x = pos.x;
-	float y = pos.y;
+	vec2 camPos(camera.cameraPosition);
+	vec2 thisPos(pos);
 
-	bool inX = false;
-	if ((camX <= x + 1.0 * tileW/2.0f) && (camX >= x - 1.0 * tileW/2.0f)) { inX = true; }
+	glm::bvec2 in(false, false);
+
+
+	if ((camPos.x <= thisPos.x + 1.0 * tileW/2.0f) && (camPos.x >= thisPos.x - 1.0 * tileW/2.0f))
+	{ 
+		in.x = true; 
+	}
 	bool inY = false;
-	if ((camY <= y + 1.0 * tileW/2.0f) && (camY >= y - 1.0 * tileW/2.0f)) { inY = true; }
-
-	bool result = inX && inY;
-
-	if (result) {
-
-		//std::cout << y << " :y" << std::endl;
-		//std::cout << y << " :y" << std::endl;
-
-		//std::cout << y + scaleFactor * tileW / 2.0f << ": y + scalefactor" << std::endl;
-		//std::cout << y - scaleFactor * tileW / 2.0f << ": y - scalefactor" << std::endl;
+	if ((camPos.y <= thisPos.y + 1.0 * tileW/2.0f) && (camPos.y >= thisPos.y - 1.0 * tileW/2.0f))
+	{ 
+		in.y = true; 
 	}
 
-	return result;
+	return glm::all(in);
 
 }
 
@@ -205,38 +211,29 @@ ReflectablePlane::~ReflectablePlane()
 
 }
 
-void ReflectablePlane::updateTilesPositions() {
+void ReflectablePlane::updateTilesPositions() 
+{
 	Scene* se = Drawable::scene;
-	glm::vec2 camPosition(se->cam->cameraPosition.x, se->cam->cameraPosition.z);
+	vec2 camPosition(se->cam->cameraPosition.x, se->cam->cameraPosition.z);
 	int whichTile = -1;
 	int howManyTiles = 0;
 
-	glm::vec2 currentTile;
-	if (getWhichTileCameraIs(currentTile)) {
-		glm::vec2 center = getPos(gridLength / 2, gridLength / 2);
-		for (glm::vec2& p : positionVec) {
+	vec2 currentTile;
+	if (getWhichTileCameraIs(currentTile)) 
+	{
+		vec2 center = getPos(planeGridLength / 2, planeGridLength / 2);
+		for (vec2& p : positionVec) 
+		{
 			p += currentTile - center;
 		}
 		setPositionsArray(positionVec);
 
-		if (waterPtr) {
-			glm::vec2 center = getPos(gridLength / 2, gridLength / 2);
-			waterPtr->setPosition(center, 1.0*gridLength, waterPtr->getHeight());
+		if (counterPlanePointer) 
+		{
+			vec2 center = getPos(planeGridLength / 2, planeGridLength / 2);
+			counterPlanePointer->setPosition(center, 1.0*planeGridLength, counterPlanePointer->getHeight());
 		}
 	}
 }
 
 
-void ReflectablePlane::reset() {
-	int octaves = this->getOctaves();
-	float freq = this->getFreq();
-	float grassCoverage = this->getGrassCoverage();
-	float dispFactor = this->getDispFactor();
-	float tessMultiplier = this->getTessMultiplier();
-
-	setOctaves(octaves);
-	setFreq(freq);
-	setGrassCoverage(grassCoverage);
-	setDispFactor(dispFactor);
-	setTessMultiplier(tessMultiplier);
-}

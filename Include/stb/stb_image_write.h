@@ -765,12 +765,12 @@ static unsigned char *stbiw__zlib_flushf(unsigned char *data, unsigned int *bitb
 
 static int stbiw__zlib_bitrev(int code, int codebits)
 {
-   int res=0;
+   int planeResolution=0;
    while (codebits--) {
-      res = (res << 1) | (code & 1);
+      planeResolution = (planeResolution << 1) | (code & 1);
       code >>= 1;
    }
-   return res;
+   return planeResolution;
 }
 
 static unsigned int stbiw__zlib_countm(unsigned char *a, unsigned char *b, int limit)

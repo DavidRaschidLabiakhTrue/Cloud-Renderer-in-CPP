@@ -33,7 +33,7 @@ void GUI::draw()
 			scene.lightDir.y = saturate(scene.lightDir.y);
 
 		}
-		ImGui::SliderFloat("Camera speed", &scene.cam->MovementSpeed, 0.0, 2000.0f * 3.0f);
+		ImGui::SliderFloat("Camera speed", &scene.cam->cameraSpeed, 0.0, 2000.0f * 3.0f);
 
 
 		if (ImGui::Button("Generate seed"))

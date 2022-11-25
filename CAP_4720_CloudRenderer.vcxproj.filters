@@ -37,6 +37,9 @@
     <Filter Include="Main">
       <UniqueIdentifier>{3ee60d18-da2a-48ae-ac34-04a9c04a3e55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\ShaderCode">
+      <UniqueIdentifier>{9d89fdbd-98b6-42f8-9180-383825c32e21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BuildExternal\glad.c">
@@ -194,5 +197,55 @@
     <ClInclude Include="Main.hpp">
       <Filter>Main</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\clouds_post.frag">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\copyFrame.frag">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\perlinworley.comp">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\PlaneCounter.frag">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\PlaneCounter.vert">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\post_processing.frag">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\screen.vert">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\sky.frag">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\skyboxVert.vert">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\ReflectablePlane.frag">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\ReflectablePlane.vert">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\textShader.frag">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\textShader.vert">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\volumetric_clouds.comp">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\weather.comp">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
+    <None Include="shaders\worley.comp">
+      <Filter>Shaders\ShaderCode</Filter>
+    </None>
   </ItemGroup>
 </Project>

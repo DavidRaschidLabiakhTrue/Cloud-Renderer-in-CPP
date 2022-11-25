@@ -2,5 +2,5 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-void initializePlaneVAO(const int res, const int width, GLuint * planeVAO, GLuint * planeVBO, GLuint * planeEBO);
+void initializePlaneVAO(const int planeResolution, const int width, GLuint * vao, GLuint * vbo, GLuint * ebo);
 

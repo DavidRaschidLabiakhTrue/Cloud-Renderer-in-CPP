@@ -436,22 +436,22 @@ static stbrp__findresult stbrp__skyline_find_best_pos(stbrp_context *c, int widt
 static stbrp__findresult stbrp__skyline_pack_rectangle(stbrp_context *context, int width, int height)
 {
    // find best position according to heuristic
-   stbrp__findresult res = stbrp__skyline_find_best_pos(context, width, height);
+   stbrp__findresult planeResolution = stbrp__skyline_find_best_pos(context, width, height);
    stbrp_node *node, *cur;
 
    // bail if:
    //    1. it failed
    //    2. the best node doesn't fit (we don't always check this)
    //    3. we're out of memory
-   if (res.prev_link == NULL || res.y + height > context->height || context->free_head == NULL) {
-      res.prev_link = NULL;
-      return res;
+   if (planeResolution.prev_link == NULL || planeResolution.y + height > context->height || context->free_head == NULL) {
+      planeResolution.prev_link = NULL;
+      return planeResolution;
    }
 
    // on success, create new node
    node = context->free_head;
-   node->x = (stbrp_coord) res.x;
-   node->y = (stbrp_coord) (res.y + height);
+   node->x = (stbrp_coord) planeResolution.x;
+   node->y = (stbrp_coord) (planeResolution.y + height);
 
    context->free_head = node->next;
 
@@ -459,19 +459,19 @@ static stbrp__findresult stbrp__skyline_pack_rectangle(stbrp_context *context, i
    // let 'cur' point to the remaining nodes needing to be
    // stiched back in
 
-   cur = *res.prev_link;
-   if (cur->x < res.x) {
+   cur = *planeResolution.prev_link;
+   if (cur->x < planeResolution.x) {
       // preserve the existing one, so start testing with the next one
       stbrp_node *next = cur->next;
       cur->next = node;
       cur = next;
    } else {
-      *res.prev_link = node;
+      *planeResolution.prev_link = node;
    }
 
    // from here, traverse cur and free the nodes, until we get to one
    // that shouldn't be freed
-   while (cur->next && cur->next->x <= res.x + width) {
+   while (cur->next && cur->next->x <= planeResolution.x + width) {
       stbrp_node *next = cur->next;
       // move the current node to the free list
       cur->next = context->free_head;
@@ -482,8 +482,8 @@ static stbrp__findresult stbrp__skyline_pack_rectangle(stbrp_context *context, i
    // stitch the list back in
    node->next = cur;
 
-   if (cur->x < res.x + width)
-      cur->x = (stbrp_coord) (res.x + width);
+   if (cur->x < planeResolution.x + width)
+      cur->x = (stbrp_coord) (planeResolution.x + width);
 
 #ifdef _DEBUG
    cur = context->active_head;
@@ -509,7 +509,7 @@ static stbrp__findresult stbrp__skyline_pack_rectangle(stbrp_context *context, i
    }
 #endif
 
-   return res;
+   return planeResolution;
 }
 
 static int STBRP__CDECL rect_height_compare(const void *a, const void *b)

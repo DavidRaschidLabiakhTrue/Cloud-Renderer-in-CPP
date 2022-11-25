@@ -1721,13 +1721,13 @@ TYPE ImGui::RoundScalarWithFormatT(const char* format, ImGuiDataType data_type, 
 
 // This is called by DragBehavior() when the widget is active (held by mouse or being manipulated with Nav controls)
 template<typename TYPE, typename SIGNEDTYPE, typename FLOATTYPE>
-bool ImGui::DragBehaviorT(ImGuiDataType data_type, TYPE* v, float v_speed, const TYPE v_min, const TYPE v_max, const char* format, float power, ImGuiDragFlags flags)
+bool ImGui::DragBehaviorT(ImGuiDataType data_type, TYPE* v, float v_speed, const TYPE v_min, const TYPE v_max, const char* format, float planeFracturePower, ImGuiDragFlags flags)
 {
     ImGuiContext& g = *GImGui;
     const ImGuiAxis axis = (flags & ImGuiDragFlags_Vertical) ? ImGuiAxis_Y : ImGuiAxis_X;
     const bool is_decimal = (data_type == ImGuiDataType_Float) || (data_type == ImGuiDataType_Double);
     const bool has_min_max = (v_min != v_max);
-    const bool is_power = (power != 1.0f && is_decimal && has_min_max && (v_max - v_min < FLT_MAX));
+    const bool is_power = (planeFracturePower != 1.0f && is_decimal && has_min_max && (v_max - v_min < FLT_MAX));
 
     // Default tweak speed
     if (v_speed == 0.0f && has_min_max && (v_max - v_min < FLT_MAX))
@@ -1780,9 +1780,9 @@ bool ImGui::DragBehaviorT(ImGuiDataType data_type, TYPE* v, float v_speed, const
     if (is_power)
     {
         // Offset + round to user desired precision, with a curve on the v_min..v_max range to get more precision on one side of the range
-        FLOATTYPE v_old_norm_curved = ImPow((FLOATTYPE)(v_cur - v_min) / (FLOATTYPE)(v_max - v_min), (FLOATTYPE)1.0f / power);
+        FLOATTYPE v_old_norm_curved = ImPow((FLOATTYPE)(v_cur - v_min) / (FLOATTYPE)(v_max - v_min), (FLOATTYPE)1.0f / planeFracturePower);
         FLOATTYPE v_new_norm_curved = v_old_norm_curved + (g.DragCurrentAccum / (v_max - v_min));
-        v_cur = v_min + (TYPE)ImPow(ImSaturate((float)v_new_norm_curved), power) * (v_max - v_min);
+        v_cur = v_min + (TYPE)ImPow(ImSaturate((float)v_new_norm_curved), planeFracturePower) * (v_max - v_min);
         v_old_ref_for_accum_remainder = v_old_norm_curved;
     }
     else
@@ -1797,7 +1797,7 @@ bool ImGui::DragBehaviorT(ImGuiDataType data_type, TYPE* v, float v_speed, const
     g.DragCurrentAccumDirty = false;
     if (is_power)
     {
-        FLOATTYPE v_cur_norm_curved = ImPow((FLOATTYPE)(v_cur - v_min) / (FLOATTYPE)(v_max - v_min), (FLOATTYPE)1.0f / power);
+        FLOATTYPE v_cur_norm_curved = ImPow((FLOATTYPE)(v_cur - v_min) / (FLOATTYPE)(v_max - v_min), (FLOATTYPE)1.0f / planeFracturePower);
         g.DragCurrentAccum -= (float)(v_cur_norm_curved - v_old_ref_for_accum_remainder);
     }
     else
@@ -1825,7 +1825,7 @@ bool ImGui::DragBehaviorT(ImGuiDataType data_type, TYPE* v, float v_speed, const
     return true;
 }
 
-bool ImGui::DragBehavior(ImGuiID id, ImGuiDataType data_type, void* v, float v_speed, const void* v_min, const void* v_max, const char* format, float power, ImGuiDragFlags flags)
+bool ImGui::DragBehavior(ImGuiID id, ImGuiDataType data_type, void* v, float v_speed, const void* v_min, const void* v_max, const char* format, float planeFracturePower, ImGuiDragFlags flags)
 {
     ImGuiContext& g = *GImGui;
     if (g.ActiveId == id)
@@ -1840,25 +1840,25 @@ bool ImGui::DragBehavior(ImGuiID id, ImGuiDataType data_type, void* v, float v_s
 
     switch (data_type)
     {
-    case ImGuiDataType_S32:    return DragBehaviorT<ImS32, ImS32, float >(data_type, (ImS32*)v,  v_speed, v_min ? *(const ImS32* )v_min : IM_S32_MIN, v_max ? *(const ImS32* )v_max : IM_S32_MAX, format, power, flags);
-    case ImGuiDataType_U32:    return DragBehaviorT<ImU32, ImS32, float >(data_type, (ImU32*)v,  v_speed, v_min ? *(const ImU32* )v_min : IM_U32_MIN, v_max ? *(const ImU32* )v_max : IM_U32_MAX, format, power, flags);
-    case ImGuiDataType_S64:    return DragBehaviorT<ImS64, ImS64, double>(data_type, (ImS64*)v,  v_speed, v_min ? *(const ImS64* )v_min : IM_S64_MIN, v_max ? *(const ImS64* )v_max : IM_S64_MAX, format, power, flags);
-    case ImGuiDataType_U64:    return DragBehaviorT<ImU64, ImS64, double>(data_type, (ImU64*)v,  v_speed, v_min ? *(const ImU64* )v_min : IM_U64_MIN, v_max ? *(const ImU64* )v_max : IM_U64_MAX, format, power, flags);
-    case ImGuiDataType_Float:  return DragBehaviorT<float, float, float >(data_type, (float*)v,  v_speed, v_min ? *(const float* )v_min : -FLT_MAX,   v_max ? *(const float* )v_max : FLT_MAX,    format, power, flags);
-    case ImGuiDataType_Double: return DragBehaviorT<double,double,double>(data_type, (double*)v, v_speed, v_min ? *(const double*)v_min : -DBL_MAX,   v_max ? *(const double*)v_max : DBL_MAX,    format, power, flags);
+    case ImGuiDataType_S32:    return DragBehaviorT<ImS32, ImS32, float >(data_type, (ImS32*)v,  v_speed, v_min ? *(const ImS32* )v_min : IM_S32_MIN, v_max ? *(const ImS32* )v_max : IM_S32_MAX, format, planeFracturePower, flags);
+    case ImGuiDataType_U32:    return DragBehaviorT<ImU32, ImS32, float >(data_type, (ImU32*)v,  v_speed, v_min ? *(const ImU32* )v_min : IM_U32_MIN, v_max ? *(const ImU32* )v_max : IM_U32_MAX, format, planeFracturePower, flags);
+    case ImGuiDataType_S64:    return DragBehaviorT<ImS64, ImS64, double>(data_type, (ImS64*)v,  v_speed, v_min ? *(const ImS64* )v_min : IM_S64_MIN, v_max ? *(const ImS64* )v_max : IM_S64_MAX, format, planeFracturePower, flags);
+    case ImGuiDataType_U64:    return DragBehaviorT<ImU64, ImS64, double>(data_type, (ImU64*)v,  v_speed, v_min ? *(const ImU64* )v_min : IM_U64_MIN, v_max ? *(const ImU64* )v_max : IM_U64_MAX, format, planeFracturePower, flags);
+    case ImGuiDataType_Float:  return DragBehaviorT<float, float, float >(data_type, (float*)v,  v_speed, v_min ? *(const float* )v_min : -FLT_MAX,   v_max ? *(const float* )v_max : FLT_MAX,    format, planeFracturePower, flags);
+    case ImGuiDataType_Double: return DragBehaviorT<double,double,double>(data_type, (double*)v, v_speed, v_min ? *(const double*)v_min : -DBL_MAX,   v_max ? *(const double*)v_max : DBL_MAX,    format, planeFracturePower, flags);
     case ImGuiDataType_COUNT:  break;
     }
     IM_ASSERT(0);
     return false;
 }
 
-bool ImGui::DragScalar(const char* label, ImGuiDataType data_type, void* v, float v_speed, const void* v_min, const void* v_max, const char* format, float power)
+bool ImGui::DragScalar(const char* label, ImGuiDataType data_type, void* v, float v_speed, const void* v_min, const void* v_max, const char* format, float planeFracturePower)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
         return false;
 
-    if (power != 1.0f)
+    if (planeFracturePower != 1.0f)
         IM_ASSERT(v_min != NULL && v_max != NULL); // When using a power curve the drag needs to have known bounds
 
     ImGuiContext& g = *GImGui;
@@ -1910,7 +1910,7 @@ bool ImGui::DragScalar(const char* label, ImGuiDataType data_type, void* v, floa
 
     // Actual drag behavior
     ItemSize(total_bb, style.FramePadding.y);
-    const bool value_changed = DragBehavior(id, data_type, v, v_speed, v_min, v_max, format, power, ImGuiDragFlags_None);
+    const bool value_changed = DragBehavior(id, data_type, v, v_speed, v_min, v_max, format, planeFracturePower, ImGuiDragFlags_None);
     if (value_changed)
         MarkItemEdited(id);
 
@@ -1930,7 +1930,7 @@ bool ImGui::DragScalar(const char* label, ImGuiDataType data_type, void* v, floa
     return value_changed;
 }
 
-bool ImGui::DragScalarN(const char* label, ImGuiDataType data_type, void* v, int components, float v_speed, const void* v_min, const void* v_max, const char* format, float power)
+bool ImGui::DragScalarN(const char* label, ImGuiDataType data_type, void* v, int components, float v_speed, const void* v_min, const void* v_max, const char* format, float planeFracturePower)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -1945,7 +1945,7 @@ bool ImGui::DragScalarN(const char* label, ImGuiDataType data_type, void* v, int
     for (int i = 0; i < components; i++)
     {
         PushID(i);
-        value_changed |= DragScalar("##v", data_type, v, v_speed, v_min, v_max, format, power);
+        value_changed |= DragScalar("##v", data_type, v, v_speed, v_min, v_max, format, planeFracturePower);
         SameLine(0, g.Style.ItemInnerSpacing.x);
         PopID();
         PopItemWidth();
@@ -1958,27 +1958,27 @@ bool ImGui::DragScalarN(const char* label, ImGuiDataType data_type, void* v, int
     return value_changed;
 }
 
-bool ImGui::DragFloat(const char* label, float* v, float v_speed, float v_min, float v_max, const char* format, float power)
+bool ImGui::DragFloat(const char* label, float* v, float v_speed, float v_min, float v_max, const char* format, float planeFracturePower)
 {
-    return DragScalar(label, ImGuiDataType_Float, v, v_speed, &v_min, &v_max, format, power);
+    return DragScalar(label, ImGuiDataType_Float, v, v_speed, &v_min, &v_max, format, planeFracturePower);
 }
 
-bool ImGui::DragFloat2(const char* label, float v[2], float v_speed, float v_min, float v_max, const char* format, float power)
+bool ImGui::DragFloat2(const char* label, float v[2], float v_speed, float v_min, float v_max, const char* format, float planeFracturePower)
 {
-    return DragScalarN(label, ImGuiDataType_Float, v, 2, v_speed, &v_min, &v_max, format, power);
+    return DragScalarN(label, ImGuiDataType_Float, v, 2, v_speed, &v_min, &v_max, format, planeFracturePower);
 }
 
-bool ImGui::DragFloat3(const char* label, float v[3], float v_speed, float v_min, float v_max, const char* format, float power)
+bool ImGui::DragFloat3(const char* label, float v[3], float v_speed, float v_min, float v_max, const char* format, float planeFracturePower)
 {
-    return DragScalarN(label, ImGuiDataType_Float, v, 3, v_speed, &v_min, &v_max, format, power);
+    return DragScalarN(label, ImGuiDataType_Float, v, 3, v_speed, &v_min, &v_max, format, planeFracturePower);
 }
 
-bool ImGui::DragFloat4(const char* label, float v[4], float v_speed, float v_min, float v_max, const char* format, float power)
+bool ImGui::DragFloat4(const char* label, float v[4], float v_speed, float v_min, float v_max, const char* format, float planeFracturePower)
 {
-    return DragScalarN(label, ImGuiDataType_Float, v, 4, v_speed, &v_min, &v_max, format, power);
+    return DragScalarN(label, ImGuiDataType_Float, v, 4, v_speed, &v_min, &v_max, format, planeFracturePower);
 }
 
-bool ImGui::DragFloatRange2(const char* label, float* v_current_min, float* v_current_max, float v_speed, float v_min, float v_max, const char* format, const char* format_max, float power)
+bool ImGui::DragFloatRange2(const char* label, float* v_current_min, float* v_current_max, float v_speed, float v_min, float v_max, const char* format, const char* format_max, float planeFracturePower)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -1989,10 +1989,10 @@ bool ImGui::DragFloatRange2(const char* label, float* v_current_min, float* v_cu
     BeginGroup();
     PushMultiItemsWidths(2);
 
-    bool value_changed = DragFloat("##min", v_current_min, v_speed, (v_min >= v_max) ? -FLT_MAX : v_min, (v_min >= v_max) ? *v_current_max : ImMin(v_max, *v_current_max), format, power);
+    bool value_changed = DragFloat("##min", v_current_min, v_speed, (v_min >= v_max) ? -FLT_MAX : v_min, (v_min >= v_max) ? *v_current_max : ImMin(v_max, *v_current_max), format, planeFracturePower);
     PopItemWidth();
     SameLine(0, g.Style.ItemInnerSpacing.x);
-    value_changed |= DragFloat("##max", v_current_max, v_speed, (v_min >= v_max) ? *v_current_min : ImMax(v_min, *v_current_min), (v_min >= v_max) ? FLT_MAX : v_max, format_max ? format_max : format, power);
+    value_changed |= DragFloat("##max", v_current_max, v_speed, (v_min >= v_max) ? *v_current_min : ImMax(v_min, *v_current_min), (v_min >= v_max) ? FLT_MAX : v_max, format_max ? format_max : format, planeFracturePower);
     PopItemWidth();
     SameLine(0, g.Style.ItemInnerSpacing.x);
 
@@ -2070,24 +2070,24 @@ bool ImGui::DragIntRange2(const char* label, int* v_current_min, int* v_current_
 //-------------------------------------------------------------------------
 
 template<typename TYPE, typename FLOATTYPE>
-float ImGui::SliderCalcRatioFromValueT(ImGuiDataType data_type, TYPE v, TYPE v_min, TYPE v_max, float power, float linear_zero_pos)
+float ImGui::SliderCalcRatioFromValueT(ImGuiDataType data_type, TYPE v, TYPE v_min, TYPE v_max, float planeFracturePower, float linear_zero_pos)
 {
     if (v_min == v_max)
         return 0.0f;
 
-    const bool is_power = (power != 1.0f) && (data_type == ImGuiDataType_Float || data_type == ImGuiDataType_Double);
+    const bool is_power = (planeFracturePower != 1.0f) && (data_type == ImGuiDataType_Float || data_type == ImGuiDataType_Double);
     const TYPE v_clamped = (v_min < v_max) ? ImClamp(v, v_min, v_max) : ImClamp(v, v_max, v_min);
     if (is_power)
     {
         if (v_clamped < 0.0f)
         {
             const float f = 1.0f - (float)((v_clamped - v_min) / (ImMin((TYPE)0, v_max) - v_min));
-            return (1.0f - ImPow(f, 1.0f/power)) * linear_zero_pos;
+            return (1.0f - ImPow(f, 1.0f/planeFracturePower)) * linear_zero_pos;
         }
         else
         {
             const float f = (float)((v_clamped - ImMax((TYPE)0, v_min)) / (v_max - ImMax((TYPE)0, v_min)));
-            return linear_zero_pos + ImPow(f, 1.0f/power) * (1.0f - linear_zero_pos);
+            return linear_zero_pos + ImPow(f, 1.0f/planeFracturePower) * (1.0f - linear_zero_pos);
         }
     }
 
@@ -2097,14 +2097,14 @@ float ImGui::SliderCalcRatioFromValueT(ImGuiDataType data_type, TYPE v, TYPE v_m
 
 // FIXME: Move some of the code into SliderBehavior(). Current responsability is larger than what the equivalent DragBehaviorT<> does, we also do some rendering, etc.
 template<typename TYPE, typename SIGNEDTYPE, typename FLOATTYPE>
-bool ImGui::SliderBehaviorT(const ImRect& bb, ImGuiID id, ImGuiDataType data_type, TYPE* v, const TYPE v_min, const TYPE v_max, const char* format, float power, ImGuiSliderFlags flags, ImRect* out_grab_bb)
+bool ImGui::SliderBehaviorT(const ImRect& bb, ImGuiID id, ImGuiDataType data_type, TYPE* v, const TYPE v_min, const TYPE v_max, const char* format, float planeFracturePower, ImGuiSliderFlags flags, ImRect* out_grab_bb)
 {
     ImGuiContext& g = *GImGui;
     const ImGuiStyle& style = g.Style;
 
     const ImGuiAxis axis = (flags & ImGuiSliderFlags_Vertical) ? ImGuiAxis_Y : ImGuiAxis_X;
     const bool is_decimal = (data_type == ImGuiDataType_Float) || (data_type == ImGuiDataType_Double);
-    const bool is_power = (power != 1.0f) && is_decimal;
+    const bool is_power = (planeFracturePower != 1.0f) && is_decimal;
 
     const float grab_padding = 2.0f;
     const float slider_sz = (bb.Max[axis] - bb.Min[axis]) - grab_padding * 2.0f;
@@ -2122,8 +2122,8 @@ bool ImGui::SliderBehaviorT(const ImRect& bb, ImGuiID id, ImGuiDataType data_typ
     if (is_power && v_min * v_max < 0.0f)
     {
         // Different sign
-        const FLOATTYPE linear_dist_min_to_0 = ImPow(v_min >= 0 ? (FLOATTYPE)v_min : -(FLOATTYPE)v_min, (FLOATTYPE)1.0f/power);
-        const FLOATTYPE linear_dist_max_to_0 = ImPow(v_max >= 0 ? (FLOATTYPE)v_max : -(FLOATTYPE)v_max, (FLOATTYPE)1.0f/power);
+        const FLOATTYPE linear_dist_min_to_0 = ImPow(v_min >= 0 ? (FLOATTYPE)v_min : -(FLOATTYPE)v_min, (FLOATTYPE)1.0f/planeFracturePower);
+        const FLOATTYPE linear_dist_max_to_0 = ImPow(v_max >= 0 ? (FLOATTYPE)v_max : -(FLOATTYPE)v_max, (FLOATTYPE)1.0f/planeFracturePower);
         linear_zero_pos = (float)(linear_dist_min_to_0 / (linear_dist_min_to_0 + linear_dist_max_to_0));
     }
     else
@@ -2163,7 +2163,7 @@ bool ImGui::SliderBehaviorT(const ImRect& bb, ImGuiID id, ImGuiDataType data_typ
             }
             else if (delta != 0.0f)
             {
-                clicked_t = SliderCalcRatioFromValueT<TYPE,FLOATTYPE>(data_type, *v, v_min, v_max, power, linear_zero_pos);
+                clicked_t = SliderCalcRatioFromValueT<TYPE,FLOATTYPE>(data_type, *v, v_min, v_max, planeFracturePower, linear_zero_pos);
                 const int decimal_precision = is_decimal ? ImParseFormatPrecision(format, 3) : 0;
                 if ((decimal_precision > 0) || is_power)
                 {
@@ -2198,7 +2198,7 @@ bool ImGui::SliderBehaviorT(const ImRect& bb, ImGuiID id, ImGuiDataType data_typ
                 {
                     // Negative: rescale to the negative range before powering
                     float a = 1.0f - (clicked_t / linear_zero_pos);
-                    a = ImPow(a, power);
+                    a = ImPow(a, planeFracturePower);
                     v_new = ImLerp(ImMin(v_max, (TYPE)0), v_min, a);
                 }
                 else
@@ -2209,7 +2209,7 @@ bool ImGui::SliderBehaviorT(const ImRect& bb, ImGuiID id, ImGuiDataType data_typ
                         a = (clicked_t - linear_zero_pos) / (1.0f - linear_zero_pos);
                     else
                         a = clicked_t;
-                    a = ImPow(a, power);
+                    a = ImPow(a, planeFracturePower);
                     v_new = ImLerp(ImMax(v_min, (TYPE)0), v_max, a);
                 }
             }
@@ -2247,7 +2247,7 @@ bool ImGui::SliderBehaviorT(const ImRect& bb, ImGuiID id, ImGuiDataType data_typ
     }
 
     // Output grab position so it can be displayed by the caller
-    float grab_t = SliderCalcRatioFromValueT<TYPE,FLOATTYPE>(data_type, *v, v_min, v_max, power, linear_zero_pos);
+    float grab_t = SliderCalcRatioFromValueT<TYPE,FLOATTYPE>(data_type, *v, v_min, v_max, planeFracturePower, linear_zero_pos);
     if (axis == ImGuiAxis_Y)
         grab_t = 1.0f - grab_t;
     const float grab_pos = ImLerp(slider_usable_pos_min, slider_usable_pos_max, grab_t);
@@ -2262,35 +2262,35 @@ bool ImGui::SliderBehaviorT(const ImRect& bb, ImGuiID id, ImGuiDataType data_typ
 // For 32-bits and larger types, slider bounds are limited to half the natural type range.
 // So e.g. an integer Slider between INT_MAX-10 and INT_MAX will fail, but an integer Slider between INT_MAX/2-10 and INT_MAX/2 will be ok.
 // It would be possible to lift that limitation with some work but it doesn't seem to be worth it for sliders.
-bool ImGui::SliderBehavior(const ImRect& bb, ImGuiID id, ImGuiDataType data_type, void* v, const void* v_min, const void* v_max, const char* format, float power, ImGuiSliderFlags flags, ImRect* out_grab_bb)
+bool ImGui::SliderBehavior(const ImRect& bb, ImGuiID id, ImGuiDataType data_type, void* v, const void* v_min, const void* v_max, const char* format, float planeFracturePower, ImGuiSliderFlags flags, ImRect* out_grab_bb)
 {
     switch (data_type)
     {
     case ImGuiDataType_S32:
         IM_ASSERT(*(const ImS32*)v_min >= IM_S32_MIN/2 && *(const ImS32*)v_max <= IM_S32_MAX/2);
-        return SliderBehaviorT<ImS32, ImS32, float >(bb, id, data_type, (ImS32*)v,  *(const ImS32*)v_min,  *(const ImS32*)v_max,  format, power, flags, out_grab_bb);
+        return SliderBehaviorT<ImS32, ImS32, float >(bb, id, data_type, (ImS32*)v,  *(const ImS32*)v_min,  *(const ImS32*)v_max,  format, planeFracturePower, flags, out_grab_bb);
     case ImGuiDataType_U32:
         IM_ASSERT(*(const ImU32*)v_min <= IM_U32_MAX/2);
-        return SliderBehaviorT<ImU32, ImS32, float >(bb, id, data_type, (ImU32*)v,  *(const ImU32*)v_min,  *(const ImU32*)v_max,  format, power, flags, out_grab_bb);
+        return SliderBehaviorT<ImU32, ImS32, float >(bb, id, data_type, (ImU32*)v,  *(const ImU32*)v_min,  *(const ImU32*)v_max,  format, planeFracturePower, flags, out_grab_bb);
     case ImGuiDataType_S64:
         IM_ASSERT(*(const ImS64*)v_min >= IM_S64_MIN/2 && *(const ImS64*)v_max <= IM_S64_MAX/2);
-        return SliderBehaviorT<ImS64, ImS64, double>(bb, id, data_type, (ImS64*)v,  *(const ImS64*)v_min,  *(const ImS64*)v_max,  format, power, flags, out_grab_bb);
+        return SliderBehaviorT<ImS64, ImS64, double>(bb, id, data_type, (ImS64*)v,  *(const ImS64*)v_min,  *(const ImS64*)v_max,  format, planeFracturePower, flags, out_grab_bb);
     case ImGuiDataType_U64:
         IM_ASSERT(*(const ImU64*)v_min <= IM_U64_MAX/2);
-        return SliderBehaviorT<ImU64, ImS64, double>(bb, id, data_type, (ImU64*)v,  *(const ImU64*)v_min,  *(const ImU64*)v_max,  format, power, flags, out_grab_bb);
+        return SliderBehaviorT<ImU64, ImS64, double>(bb, id, data_type, (ImU64*)v,  *(const ImU64*)v_min,  *(const ImU64*)v_max,  format, planeFracturePower, flags, out_grab_bb);
     case ImGuiDataType_Float:
         IM_ASSERT(*(const float*)v_min >= -FLT_MAX/2.0f && *(const float*)v_max <= FLT_MAX/2.0f);
-        return SliderBehaviorT<float, float, float >(bb, id, data_type, (float*)v,  *(const float*)v_min,  *(const float*)v_max,  format, power, flags, out_grab_bb);
+        return SliderBehaviorT<float, float, float >(bb, id, data_type, (float*)v,  *(const float*)v_min,  *(const float*)v_max,  format, planeFracturePower, flags, out_grab_bb);
     case ImGuiDataType_Double:
         IM_ASSERT(*(const double*)v_min >= -DBL_MAX/2.0f && *(const double*)v_max <= DBL_MAX/2.0f);
-        return SliderBehaviorT<double,double,double>(bb, id, data_type, (double*)v, *(const double*)v_min, *(const double*)v_max, format, power, flags, out_grab_bb);
+        return SliderBehaviorT<double,double,double>(bb, id, data_type, (double*)v, *(const double*)v_min, *(const double*)v_max, format, planeFracturePower, flags, out_grab_bb);
     case ImGuiDataType_COUNT: break;
     }
     IM_ASSERT(0);
     return false;
 }
 
-bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* v, const void* v_min, const void* v_max, const char* format, float power)
+bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* v, const void* v_min, const void* v_max, const char* format, float planeFracturePower)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -2351,7 +2351,7 @@ bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* v, co
 
     // Slider behavior
     ImRect grab_bb;
-    const bool value_changed = SliderBehavior(frame_bb, id, data_type, v, v_min, v_max, format, power, ImGuiSliderFlags_None, &grab_bb);
+    const bool value_changed = SliderBehavior(frame_bb, id, data_type, v, v_min, v_max, format, planeFracturePower, ImGuiSliderFlags_None, &grab_bb);
     if (value_changed)
         MarkItemEdited(id);
 
@@ -2370,7 +2370,7 @@ bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* v, co
 }
 
 // Add multiple sliders on 1 line for compact edition of multiple components
-bool ImGui::SliderScalarN(const char* label, ImGuiDataType data_type, void* v, int components, const void* v_min, const void* v_max, const char* format, float power)
+bool ImGui::SliderScalarN(const char* label, ImGuiDataType data_type, void* v, int components, const void* v_min, const void* v_max, const char* format, float planeFracturePower)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -2385,7 +2385,7 @@ bool ImGui::SliderScalarN(const char* label, ImGuiDataType data_type, void* v, i
     for (int i = 0; i < components; i++)
     {
         PushID(i);
-        value_changed |= SliderScalar("##v", data_type, v, v_min, v_max, format, power);
+        value_changed |= SliderScalar("##v", data_type, v, v_min, v_max, format, planeFracturePower);
         SameLine(0, g.Style.ItemInnerSpacing.x);
         PopID();
         PopItemWidth();
@@ -2398,24 +2398,24 @@ bool ImGui::SliderScalarN(const char* label, ImGuiDataType data_type, void* v, i
     return value_changed;
 }
 
-bool ImGui::SliderFloat(const char* label, float* v, float v_min, float v_max, const char* format, float power)
+bool ImGui::SliderFloat(const char* label, float* v, float v_min, float v_max, const char* format, float planeFracturePower)
 {
-    return SliderScalar(label, ImGuiDataType_Float, v, &v_min, &v_max, format, power);
+    return SliderScalar(label, ImGuiDataType_Float, v, &v_min, &v_max, format, planeFracturePower);
 }
 
-bool ImGui::SliderFloat2(const char* label, float v[2], float v_min, float v_max, const char* format, float power)
+bool ImGui::SliderFloat2(const char* label, float v[2], float v_min, float v_max, const char* format, float planeFracturePower)
 {
-    return SliderScalarN(label, ImGuiDataType_Float, v, 2, &v_min, &v_max, format, power);
+    return SliderScalarN(label, ImGuiDataType_Float, v, 2, &v_min, &v_max, format, planeFracturePower);
 }
 
-bool ImGui::SliderFloat3(const char* label, float v[3], float v_min, float v_max, const char* format, float power)
+bool ImGui::SliderFloat3(const char* label, float v[3], float v_min, float v_max, const char* format, float planeFracturePower)
 {
-    return SliderScalarN(label, ImGuiDataType_Float, v, 3, &v_min, &v_max, format, power);
+    return SliderScalarN(label, ImGuiDataType_Float, v, 3, &v_min, &v_max, format, planeFracturePower);
 }
 
-bool ImGui::SliderFloat4(const char* label, float v[4], float v_min, float v_max, const char* format, float power)
+bool ImGui::SliderFloat4(const char* label, float v[4], float v_min, float v_max, const char* format, float planeFracturePower)
 {
-    return SliderScalarN(label, ImGuiDataType_Float, v, 4, &v_min, &v_max, format, power);
+    return SliderScalarN(label, ImGuiDataType_Float, v, 4, &v_min, &v_max, format, planeFracturePower);
 }
 
 bool ImGui::SliderAngle(const char* label, float* v_rad, float v_degrees_min, float v_degrees_max, const char* format)
@@ -2448,7 +2448,7 @@ bool ImGui::SliderInt4(const char* label, int v[4], int v_min, int v_max, const 
     return SliderScalarN(label, ImGuiDataType_S32, v, 4, &v_min, &v_max, format);
 }
 
-bool ImGui::VSliderScalar(const char* label, const ImVec2& size, ImGuiDataType data_type, void* v, const void* v_min, const void* v_max, const char* format, float power)
+bool ImGui::VSliderScalar(const char* label, const ImVec2& size, ImGuiDataType data_type, void* v, const void* v_min, const void* v_max, const char* format, float planeFracturePower)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -2490,7 +2490,7 @@ bool ImGui::VSliderScalar(const char* label, const ImVec2& size, ImGuiDataType d
 
     // Slider behavior
     ImRect grab_bb;
-    const bool value_changed = SliderBehavior(frame_bb, id, data_type, v, v_min, v_max, format, power, ImGuiSliderFlags_Vertical, &grab_bb);
+    const bool value_changed = SliderBehavior(frame_bb, id, data_type, v, v_min, v_max, format, planeFracturePower, ImGuiSliderFlags_Vertical, &grab_bb);
     if (value_changed)
         MarkItemEdited(id);
 
@@ -2508,9 +2508,9 @@ bool ImGui::VSliderScalar(const char* label, const ImVec2& size, ImGuiDataType d
     return value_changed;
 }
 
-bool ImGui::VSliderFloat(const char* label, const ImVec2& size, float* v, float v_min, float v_max, const char* format, float power)
+bool ImGui::VSliderFloat(const char* label, const ImVec2& size, float* v, float v_min, float v_max, const char* format, float planeFracturePower)
 {
-    return VSliderScalar(label, size, ImGuiDataType_Float, v, &v_min, &v_max, format, power);
+    return VSliderScalar(label, size, ImGuiDataType_Float, v, &v_min, &v_max, format, planeFracturePower);
 }
 
 bool ImGui::VSliderInt(const char* label, const ImVec2& size, int* v, int v_min, int v_max, const char* format)

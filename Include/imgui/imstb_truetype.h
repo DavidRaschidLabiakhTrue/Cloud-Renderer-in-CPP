@@ -4470,7 +4470,7 @@ STBTT_DEF unsigned char * stbtt_GetGlyphSDF(const stbtt_fontinfo *info, float sc
                      float ax = x1-x0, ay = y1-y0;
                      float bx = x0 - 2*x1 + x2, by = y0 - 2*y1 + y2;
                      float mx = x0 - sx, my = y0 - sy;
-                     float res[3],px,py,t,it;
+                     float planeResolution[3],px,py,t,it;
                      float a_inv = precompute[i];
                      if (a_inv == 0.0) { // if a_inv is 0, it's 2nd degree so use quadratic formula
                         float a = 3*(ax*bx + ay*by);
@@ -4478,7 +4478,7 @@ STBTT_DEF unsigned char * stbtt_GetGlyphSDF(const stbtt_fontinfo *info, float sc
                         float c = mx*ax+my*ay;
                         if (a == 0.0) { // if a is 0, it's linear
                            if (b != 0.0) {
-                              res[num++] = -c/b;
+                              planeResolution[num++] = -c/b;
                            }
                         } else {
                            float discriminant = b*b - 4*a*c;
@@ -4486,8 +4486,8 @@ STBTT_DEF unsigned char * stbtt_GetGlyphSDF(const stbtt_fontinfo *info, float sc
                               num = 0;
                            else {
                               float root = (float) STBTT_sqrt(discriminant);
-                              res[0] = (-b - root)/(2*a);
-                              res[1] = (-b + root)/(2*a);
+                              planeResolution[0] = (-b - root)/(2*a);
+                              planeResolution[1] = (-b + root)/(2*a);
                               num = 2; // don't bother distinguishing 1-solution case, as code below will still work
                            }
                         }
@@ -4495,26 +4495,26 @@ STBTT_DEF unsigned char * stbtt_GetGlyphSDF(const stbtt_fontinfo *info, float sc
                         float b = 3*(ax*bx + ay*by) * a_inv; // could precompute this as it doesn't depend on sample point
                         float c = (2*(ax*ax + ay*ay) + (mx*bx+my*by)) * a_inv;
                         float d = (mx*ax+my*ay) * a_inv;
-                        num = stbtt__solve_cubic(b, c, d, res);
+                        num = stbtt__solve_cubic(b, c, d, planeResolution);
                      }
-                     if (num >= 1 && res[0] >= 0.0f && res[0] <= 1.0f) {
-                        t = res[0], it = 1.0f - t;
+                     if (num >= 1 && planeResolution[0] >= 0.0f && planeResolution[0] <= 1.0f) {
+                        t = planeResolution[0], it = 1.0f - t;
                         px = it*it*x0 + 2*t*it*x1 + t*t*x2;
                         py = it*it*y0 + 2*t*it*y1 + t*t*y2;
                         dist2 = (px-sx)*(px-sx) + (py-sy)*(py-sy);
                         if (dist2 < min_dist * min_dist)
                            min_dist = (float) STBTT_sqrt(dist2);
                      }
-                     if (num >= 2 && res[1] >= 0.0f && res[1] <= 1.0f) {
-                        t = res[1], it = 1.0f - t;
+                     if (num >= 2 && planeResolution[1] >= 0.0f && planeResolution[1] <= 1.0f) {
+                        t = planeResolution[1], it = 1.0f - t;
                         px = it*it*x0 + 2*t*it*x1 + t*t*x2;
                         py = it*it*y0 + 2*t*it*y1 + t*t*y2;
                         dist2 = (px-sx)*(px-sx) + (py-sy)*(py-sy);
                         if (dist2 < min_dist * min_dist)
                            min_dist = (float) STBTT_sqrt(dist2);
                      }
-                     if (num >= 3 && res[2] >= 0.0f && res[2] <= 1.0f) {
-                        t = res[2], it = 1.0f - t;
+                     if (num >= 3 && planeResolution[2] >= 0.0f && planeResolution[2] <= 1.0f) {
+                        t = planeResolution[2], it = 1.0f - t;
                         px = it*it*x0 + 2*t*it*x1 + t*t*x2;
                         py = it*it*y0 + 2*t*it*y1 + t*t*y2;
                         dist2 = (px-sx)*(px-sx) + (py-sy)*(py-sy);

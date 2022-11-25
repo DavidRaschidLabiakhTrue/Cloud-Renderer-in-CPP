@@ -23,50 +23,30 @@ using glm::radians;
 class Camera
 {
 	public:
-		// Camera Attributes
-		vec3 cameraPosition;
-		vec3 cameraFront;
-		vec3 cameraUp;
-		vec3 cameraRight;
-		vec3 worldUp;
-		// Euler Angles
-		float Yaw;
-		float Pitch;
-		// Camera options
-		float MovementSpeed;
-		float MouseSensitivity;
-		float Zoom;
 
-		// Constructor with vectors
-		Camera(vec3 position = vec3(0.0f, 0.0f, 0.0f), vec3 up = vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0f, float pitch = 0.0f) : cameraFront(vec3(0.0f, 0.0f, -5.0f)), MovementSpeed(2000.0f), MouseSensitivity(0.1f), Zoom(60.0f)
+		Camera(vec3 position = vec3(0.0f, 0.0f, 0.0f), vec3 up = vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0f, float pitch = 0.0f) : cameraFront(vec3(0.0f, 0.0f, -5.0f)), cameraSpeed(2000.0f), cameraSensitivity(0.1f), cameraZoom(60.0f)
 		{
 			cameraPosition = position;
 			worldUp = up;
-			Yaw = yaw;
-			Pitch = pitch;
+			cameraYaw = yaw;
+			cameraPitch = pitch;
 			updateCameraVectors();
 		}
-		// Constructor with scalar values
-		Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : cameraFront(vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(2000.0f), MouseSensitivity(0.1f), Zoom(60.0f)
+		Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : cameraFront(vec3(0.0f, 0.0f, -1.0f)), cameraSpeed(2000.0f), cameraSensitivity(0.1f), cameraZoom(60.0f)
 		{
 			cameraPosition = vec3(posX, posY, posZ);
 			worldUp = vec3(upX, upY, upZ);
-			Yaw = yaw;
-			Pitch = pitch;
+			cameraYaw = yaw;
+			cameraPitch = pitch;
 			updateCameraVectors();
 		}
 
-		// Returns the view matrix calculated using Euler Angles and the LookAt Matrix
-		glm::mat4 GetViewMatrix()
-		{
-			updateCameraVectors();
-			return lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
-		}
 
-		// Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
+
+		
 		void ProcessKeyboard(CameraDirectionCommand direction, float deltaTime)
 		{
-			float velocity = MovementSpeed * deltaTime;
+			float velocity = cameraSpeed * deltaTime;
 			if (direction == CameraForwardDirection)
 			{
 				cameraPosition += cameraFront * velocity;
@@ -84,11 +64,15 @@ class Camera
 				cameraPosition += cameraRight * velocity;
 			}
 		}
-		float Random2D(vec2 st)
+		float Random2D(vec2 st) // a standard way in shaders of generating "random" values
 		{
 			return glm::fract(glm::sin(glm::dot(st, vec2(12.9898f, 78.233f))) * 43758.5453123f);
 		}
-
+		glm::mat4 GetViewMatrix()
+		{
+			updateCameraVectors();
+			return lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
+		}
 		float InterpolatedNoise(int ind, float x, float y) 
 		{
 			float integer_X = floor(x);
@@ -102,17 +86,27 @@ class Camera
 			float d = Random2D(randomInput + vec2(1.0, 1.0));
 
 			vec2 w = vec2(fractional_X, fractional_Y);
-			w = w * w*w*(10.0f + w * (-15.0f + 6.0f*w));
 
-			float k0 = a,
-				k1 = b - a,
-				k2 = c - a,
-				k3 = d - c - b + a;
-
-			return k0 + k1 * w.x + k2 * w.y + k3 * w.x*w.y;
+			w = w * w * w * (10.0f + w * (-15.0f + 6.0f*w));
+			return a + (b - a) * w.x + (c - a) * w.y + (d - c - b + a) * w.x * w.y; // Don't ask me what this means - David.
 		}
+		// orientating vectors
+		vec3 cameraPosition;
+		vec3 cameraFront;
+		vec3 cameraUp;
+		vec3 cameraRight;
+		vec3 worldUp;
 
-		float perlin(vec2 st, int octaves, float freq, float gDispFactor) 
+		float cameraYaw; // Angles
+		float cameraPitch; // Angles
+
+	
+		float cameraSpeed;
+		float cameraSensitivity;
+		float cameraZoom;
+
+
+		float perlin(vec2 st, int planeOctaves, float freq, float gDispFactor) 
 		{
 			glm::mat2 m;
 			m[0][0] = 0.8;
@@ -121,14 +115,14 @@ class Camera
 			m[1][1] = 0.8;
 			float persistence = 0.5;
 			float total = 0.0;
-			float frequency = 0.005 * freq;
+			float planeFrequencyFactor = 0.005 * freq;
 			float amplitude = gDispFactor; // gravity disposition
-			for (int i = 0; i < octaves; ++i) 
+			for (int i = 0; i < planeOctaves; ++i) 
 			{
-				frequency *= 2.0;
+				planeFrequencyFactor *= 2.0;
 				amplitude *= persistence;
 
-				vec2 v = frequency * st;
+				vec2 v = planeFrequencyFactor * st;
 
 				total += InterpolatedNoise(0, v.x, v.y) * amplitude;
 			}
@@ -145,22 +139,22 @@ class Camera
 		// Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
 		void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true)
 		{
-			xoffset *= MouseSensitivity;
-			yoffset *= MouseSensitivity;
+			xoffset *= cameraSensitivity;
+			yoffset *= cameraSensitivity;
 
-			Yaw += xoffset;
-			Pitch += yoffset;
+			cameraYaw += xoffset;
+			cameraPitch += yoffset;
 
 			// Make sure that when pitch is out of bounds, screen doesn't get flipped
 			if (constrainPitch)
 			{
-				if (Pitch > 89.0f)
+				if (cameraPitch > 89.0f)
 				{
-					Pitch = 89.0f;
+					cameraPitch = 89.0f;
 				}
-				if (Pitch < -89.0f)
+				if (cameraPitch < -89.0f)
 				{
-					Pitch = -89.0f;
+					cameraPitch = -89.0f;
 				}	
 			}
 			updateCameraVectors();
@@ -168,16 +162,16 @@ class Camera
 
 		void ProcessMouseScroll(float yoffset)
 		{
-			if (Zoom >= 1.0f && Zoom <= 100.0f)
+			if (cameraZoom >= 1.0f && cameraZoom <= 100.0f)
 			{
-				Zoom -= yoffset;
+				cameraZoom -= yoffset;
 			}
-			Zoom = glm::clamp(Zoom, 1.0f, 100.0f);	
+			cameraZoom = glm::clamp(cameraZoom, 1.0f, 100.0f);	
 		}
 
 		void invertPitch() 
 		{
-			this->Pitch = -Pitch;
+			this->cameraPitch = -cameraPitch;
 			updateCameraVectors();
 		}
 
@@ -185,13 +179,15 @@ class Camera
 
 		void updateCameraVectors()
 		{
+			using glm::normalize;
+			using glm::cross;
 			vec3 front;
-			front.x = cos(radians(Yaw)) * cos(radians(Pitch));
-			front.y = sin(radians(Pitch));
-			front.z = sin(radians(Yaw)) * cos(radians(Pitch));
-			cameraFront = glm::normalize(front);
-			cameraRight = glm::normalize(glm::cross(cameraFront, worldUp));
-			cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront));
+			front.x = cos(radians(cameraYaw)) * cos(radians(cameraPitch));
+			front.y = sin(radians(cameraPitch));
+			front.z = sin(radians(cameraYaw)) * cos(radians(cameraPitch));
+			cameraFront = normalize(front);
+			cameraRight = normalize(cross(cameraFront, worldUp));
+			cameraUp = normalize(cross(cameraRight, cameraFront));
 		}
 };
 #endif

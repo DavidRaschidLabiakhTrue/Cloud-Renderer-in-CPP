@@ -29,7 +29,7 @@ void VolumetricClouds::draw()
 	cloudData.setMat4("inv_proj", glm::inverse(s->proj));
 	cloudData.setMat4("inv_view", glm::inverse(s->cam->GetViewMatrix()));
 	cloudData.setVec3("cameraPosition", s->cam->cameraPosition);
-	cloudData.setFloat("FOV", s->cam->Zoom);
+	cloudData.setFloat("FOV", s->cam->cameraZoom);
 	cloudData.setVec3("lightDirection", glm::normalize(s->lightPos - s->cam->cameraPosition));
 	cloudData.setVec3("lightColor", s->lightColor);
 	

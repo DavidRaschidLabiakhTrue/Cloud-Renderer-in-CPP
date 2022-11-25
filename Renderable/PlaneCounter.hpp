@@ -59,7 +59,7 @@ class PlaneCounter : public Drawable
 	private:
 		void drawVertices();
 
-		unsigned int planeVAO, planeVBO, planeEBO;
+		unsigned int vao, vbo, ebo;
 		float scale, height;
 		FrameBufferObject * reflectionFBO; // these effectively do nothing but help the clouds *be clouds*
 		FrameBufferObject * refractionFBO; // these effectively do nothing but help the clouds *be clouds*
