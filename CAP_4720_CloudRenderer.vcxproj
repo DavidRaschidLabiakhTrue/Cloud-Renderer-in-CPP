@@ -107,6 +107,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,6 +139,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,13 +154,6 @@
     <ClCompile Include="BuildExternal\glad.c" />
     <ClCompile Include="BuildExternal\stb_image.cpp" />
     <ClCompile Include="BuildExternal\stb_image_write.cpp" />
-    <ClCompile Include="DrawableObjects\Drawable.cpp" />
-    <ClCompile Include="DrawableObjects\DrawableClouds.cpp" />
-    <ClCompile Include="DrawableObjects\GUI.cpp" />
-    <ClCompile Include="DrawableObjects\PlaneCounter.cpp" />
-    <ClCompile Include="DrawableObjects\ReflectablePlane.cpp" />
-    <ClCompile Include="DrawableObjects\Skybox.cpp" />
-    <ClCompile Include="DrawableObjects\VolumetricClouds.cpp" />
     <ClCompile Include="Engine\BaseShader.cpp" />
     <ClCompile Include="Engine\buffers.cpp" />
     <ClCompile Include="Engine\PostProcess.cpp" />
@@ -164,23 +161,22 @@
     <ClCompile Include="Engine\texture.cpp" />
     <ClCompile Include="Engine\utils.cpp" />
     <ClCompile Include="Engine\Window.cpp" />
-    <ClCompile Include="imgui\imgui.cpp" />
-    <ClCompile Include="imgui\imgui_demo.cpp" />
-    <ClCompile Include="imgui\imgui_draw.cpp" />
-    <ClCompile Include="imgui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="imgui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Include\imgui\imgui.cpp" />
+    <ClCompile Include="Include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Include\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Include\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Renderable\Drawable.cpp" />
+    <ClCompile Include="Renderable\DrawableClouds.cpp" />
+    <ClCompile Include="Renderable\GUI.cpp" />
+    <ClCompile Include="Renderable\PlaneCounter.cpp" />
+    <ClCompile Include="Renderable\ReflectablePlane.cpp" />
+    <ClCompile Include="Renderable\Skybox.cpp" />
+    <ClCompile Include="Renderable\VolumetricClouds.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DrawableObjects\Drawable.hpp" />
-    <ClInclude Include="DrawableObjects\DrawableClouds.hpp" />
-    <ClInclude Include="DrawableObjects\GUI.hpp" />
-    <ClInclude Include="DrawableObjects\PlaneCounter.hpp" />
-    <ClInclude Include="DrawableObjects\ReflectablePlane.hpp" />
-    <ClInclude Include="DrawableObjects\Scene.hpp" />
-    <ClInclude Include="DrawableObjects\Skybox.hpp" />
-    <ClInclude Include="DrawableObjects\VolumetricClouds.hpp" />
     <ClInclude Include="Engine\BaseShader.hpp" />
     <ClInclude Include="Engine\buffers.hpp" />
     <ClInclude Include="Engine\PostProcess.hpp" />
@@ -188,20 +184,26 @@
     <ClInclude Include="Engine\Texture.hpp" />
     <ClInclude Include="Engine\Utils.hpp" />
     <ClInclude Include="Engine\Window.hpp" />
-    <ClInclude Include="imgui\imconfig.h" />
-    <ClInclude Include="imgui\imgui.h" />
-    <ClInclude Include="imgui\imgui_impl_glfw.h" />
-    <ClInclude Include="imgui\imgui_impl_opengl3.h" />
-    <ClInclude Include="imgui\imgui_internal.h" />
-    <ClInclude Include="imgui\imstb_rectpack.h" />
-    <ClInclude Include="imgui\imstb_textedit.h" />
-    <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="Include\Camera.hpp" />
     <ClInclude Include="Include\ft2build.h" />
-    <ClInclude Include="Include\mesh.h" />
-    <ClInclude Include="Include\model.h" />
+    <ClInclude Include="Include\imgui\imconfig.h" />
+    <ClInclude Include="Include\imgui\imgui.h" />
+    <ClInclude Include="Include\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="Include\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Include\imgui\imgui_internal.h" />
+    <ClInclude Include="Include\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Include\imgui\imstb_textedit.h" />
+    <ClInclude Include="Include\imgui\imstb_truetype.h" />
     <ClInclude Include="Include\stb_image.h" />
     <ClInclude Include="Include\stb_image_write.h" />
+    <ClInclude Include="Renderable\Drawable.hpp" />
+    <ClInclude Include="Renderable\DrawableClouds.hpp" />
+    <ClInclude Include="Renderable\GUI.hpp" />
+    <ClInclude Include="Renderable\PlaneCounter.hpp" />
+    <ClInclude Include="Renderable\ReflectablePlane.hpp" />
+    <ClInclude Include="Renderable\Scene.hpp" />
+    <ClInclude Include="Renderable\Skybox.hpp" />
+    <ClInclude Include="Renderable\VolumetricClouds.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

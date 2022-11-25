@@ -1,7 +1,7 @@
 #pragma once
 #include "Shader.hpp"
 #include <glad/glad.h>
-#include "../DrawableObjects/Drawable.hpp"
+#include "../Renderable/Drawable.hpp"
 
 // refactors those shaders which write only into the screen space (e.g. post processing, ShaderToy.com), so only the fragment shader it's needed and the model is only two triangles
 class PostProcessor : Drawable

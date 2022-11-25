@@ -9,11 +9,11 @@
 #include "Engine/PostProcess.hpp"
 #include "Engine/Texture.hpp"
 
-#include "DrawableObjects/VolumetricClouds.hpp"
-#include "DrawableObjects/ReflectablePlane.hpp"
-#include "DrawableObjects/Skybox.hpp"
-#include "DrawableObjects/PlaneCounter.hpp"
-#include "DrawableObjects/DrawableClouds.hpp"
+#include "Renderable/VolumetricClouds.hpp"
+#include "Renderable/ReflectablePlane.hpp"
+#include "Renderable/Skybox.hpp"
+#include "Renderable/PlaneCounter.hpp"
+#include "Renderable/DrawableClouds.hpp"
 
 #include <Camera.hpp>
 #include <stb_image.h>
@@ -24,9 +24,9 @@
 #include <glm/gtc/random.hpp>
 
 
-#include "DrawableObjects/Scene.hpp"
-#include "DrawableObjects/Drawable.hpp"
-#include "DrawableObjects/GUI.hpp"
+#include "Renderable/Scene.hpp"
+#include "Renderable/Drawable.hpp"
+#include "Renderable/GUI.hpp"
 
 #include <iostream>
 #include <vector>
