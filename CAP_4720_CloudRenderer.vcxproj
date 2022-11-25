@@ -185,7 +185,6 @@
     <ClInclude Include="Engine\Utils.hpp" />
     <ClInclude Include="Engine\Window.hpp" />
     <ClInclude Include="Include\Camera.hpp" />
-    <ClInclude Include="Include\ft2build.h" />
     <ClInclude Include="Include\imgui\imconfig.h" />
     <ClInclude Include="Include\imgui\imgui.h" />
     <ClInclude Include="Include\imgui\imgui_impl_glfw.h" />

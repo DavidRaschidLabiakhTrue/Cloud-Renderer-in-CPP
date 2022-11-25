@@ -141,9 +141,6 @@
     <ClInclude Include="Include\Camera.hpp">
       <Filter>Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Include\ft2build.h">
-      <Filter>BuildExternal</Filter>
-    </ClInclude>
     <ClInclude Include="Include\stb_image.h">
       <Filter>BuildExternal</Filter>
     </ClInclude>
