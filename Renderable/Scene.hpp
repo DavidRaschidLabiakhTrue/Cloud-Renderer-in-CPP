@@ -53,7 +53,7 @@ struct Scene
 	{
 		this->cam->invertPitch();
 
-		this->cam->Position.y -= 2 * (this->cam->Position.y - reflectedHeight);
+		this->cam->cameraPosition.y -= 2 * (this->cam->cameraPosition.y - reflectedHeight);
 	}
 
 };

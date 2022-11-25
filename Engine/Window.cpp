@@ -36,6 +36,7 @@ Window::Window(unsigned int scrW, unsigned int scrH, std::string name) : windowN
 		successfulLoad = false;
 		return;
 	}
+
 	glfwMakeContextCurrent(this->WindowPointer);
 	glfwSetFramebufferSizeCallback(this->WindowPointer, &Window::framebuffer_size_callback);
 	glfwSetCursorPosCallback(this->WindowPointer, &Window::mouse_callback);
@@ -107,41 +108,42 @@ void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height
 void Window::processInput(float frameTime) 
 {
 	if (glfwGetKey(this->WindowPointer, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
 		glfwSetWindowShouldClose(this->WindowPointer, true);
+	}
 
 	if (glfwGetKey(this->WindowPointer, GLFW_KEY_W) == GLFW_PRESS)
-		camera->ProcessKeyboard(FORWARD, frameTime);
-	if (glfwGetKey(this->WindowPointer, GLFW_KEY_S) == GLFW_PRESS)
-		camera->ProcessKeyboard(BACKWARD, frameTime);
+	{
+		camera->ProcessKeyboard(CameraForwardDirection, frameTime);
+	}
 	if (glfwGetKey(this->WindowPointer, GLFW_KEY_A) == GLFW_PRESS)
-		camera->ProcessKeyboard(LEFT, frameTime);
+	{
+		camera->ProcessKeyboard(CameraLeftDirection, frameTime);
+	}
+	if (glfwGetKey(this->WindowPointer, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		camera->ProcessKeyboard(CameraBackwardDirection, frameTime);
+	}
 	if (glfwGetKey(this->WindowPointer, GLFW_KEY_D) == GLFW_PRESS)
-		camera->ProcessKeyboard(RIGHT, frameTime);
+	{
+		camera->ProcessKeyboard(CameraRightDirection, frameTime);
+	}
+		
 	
 	newState = glfwGetMouseButton(this->WindowPointer, GLFW_MOUSE_BUTTON_RIGHT);
 
-	if (newState == GLFW_RELEASE && oldState == GLFW_PRESS) {
-		glfwSetInputMode(this->WindowPointer, GLFW_CURSOR, (mouseCursorDisabled
-		? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
+	if (newState == GLFW_RELEASE && oldState == GLFW_PRESS) 
+	{
+		glfwSetInputMode(this->WindowPointer, GLFW_CURSOR, (mouseCursorDisabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
 		mouseCursorDisabled = !mouseCursorDisabled;
 		if (mouseCursorDisabled)
+		{
 			firstMouse = true;
-		//std::cout << "MOUSE R PRESSED!" << std::endl;
+		}
 	}
 
 	oldState = newState;
 	
-	// WIREFRAME
-	if (glfwGetKey(this->WindowPointer, GLFW_KEY_T) == GLFW_PRESS) {
-		if (keyBools[4] == false) {
-			//std::cout << "WIREFRAME" << std::endl;
-			wireframe = !wireframe;
-			keyBools[4] = true;
-		}
-	}
-	else if (glfwGetKey(this->WindowPointer, GLFW_KEY_T) == GLFW_RELEASE) {
-		if (keyBools[4] == true) { keyBools[4] = false; } // Non aggiungere niente qui
-	}
 }
 
 Window::~Window()

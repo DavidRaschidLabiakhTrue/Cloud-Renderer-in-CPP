@@ -52,72 +52,38 @@ int Main::run()
 
 	gui.attach(&cloudsModel).attach(&skybox);
 
-
+	float frametime = 0.0f;
 	while (window.continueLoop())
 	{
 		scene.lightDir = glm::normalize(scene.lightDir);
-		scene.lightPos = scene.lightDir * 1e6f + camera.Position;
+		scene.lightPos = scene.lightDir * 1e6f + camera.cameraPosition;
 
-		// input
-		float frametime = 1 / ImGui::GetIO().Framerate;
+	
+		frametime = 1 / ImGui::GetIO().Framerate;
 		window.processInput(frametime);
-
-		//update tiles position to make the world infinite, clouds weather map and sky colors
-		//reflectablePlane.updateTilesPositions();
-
-
 		cloudsModel.update(); // update clouds
 		gui.update();
 		skybox.update(); // update skybox
-
 		SceneFBO.bind();
-
 		clear1();
-
-
-
 		view = scene.cam->GetViewMatrix();
 		scene.proj = glm::perspective(glm::radians(camera.Zoom), (float)Window::ScreenWidth / (float)Window::ScreenHeight, 5.f, 10000000.0f);
-
-
-
 		planeCounter.bindReflectionFBO();
 		clear2();
-
 		scene.updateCameraAttributes(planeCounter.getHeight());
-
-
-		reflectablePlane.up = 1.0;
-		reflectablePlane.draw();
+		reflectablePlane.setUp(1.0f).draw();
 		FrameBufferObject const& reflFBO = planeCounter.getReflectionFBO();
-
 		PostProcessor::disableTests();
-
 		reflectionVolumetricClouds.draw();
-		planeCounter.bindReflectionFBO(); //rebind refl buffer; reflVolumetricClouds unbound it
-
+		planeCounter.bindReflectionFBO(); 
 		postProcess1(reflFBO, reflectionVolumetricClouds);
-
-
-		
-
-		scene.cam->invertPitch();
-		scene.cam->Position.y += 2 * abs(scene.cam->Position.y - planeCounter.getHeight());
-
-		//draw to water refraction buffer object
+		scene.updateCameraAttributes(planeCounter.getHeight());
 		planeCounter.bindRefractionFBO();
-
 		clear3();
-
-		reflectablePlane.up = -1.0;
-		reflectablePlane.draw();
-
-		
+		reflectablePlane.setUp(-1.0f).draw();
 		scene.sceneFBO->bind();
 		reflectablePlane.draw();
 		planeCounter.draw();
-
-		
 		PostProcessor::disableTests();
 
 		volumetricClouds.draw();
@@ -152,7 +118,7 @@ void Main::postProcess2(const Scene& scene, const FrameBufferObject& fbo, Volume
 	Shader& post = PostProcessing.getShader();
 	post.use();
 	post.setVec2("resolution", glm::vec2(Window::ScreenWidth, Window::ScreenHeight));
-	post.setVec3("cameraPosition", scene.cam->Position);
+	post.setVec3("cameraPosition", scene.cam->cameraPosition);
 	post.setSampler2D("screenTexture", fbo.tex, 0);
 	post.setSampler2D("cloudTEX", volumetricClouds.getCloudsTexture(), 1);
 	post.setSampler2D("depthTex", fbo.depthTex, 2);

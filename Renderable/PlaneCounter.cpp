@@ -93,7 +93,7 @@ void PlaneCounter::draw()
 	float moveFactor = waveSpeed * time;
 	shader->setFloat("moveFactor", moveFactor);
 
-	shader->setVec3("cameraPosition", se->cam->Position);
+	shader->setVec3("cameraPosition", se->cam->cameraPosition);
 
 	//waterPlane->Draw(*shad);
 	this->drawVertices();

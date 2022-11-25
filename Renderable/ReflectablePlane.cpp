@@ -102,7 +102,7 @@ void ReflectablePlane::draw(){
 	glm::mat4 gVP = se->proj * se->cam->GetViewMatrix();
 
 	shad->use();
-	shad->setVec3("gEyeWorldPos", se->cam->Position);
+	shad->setVec3("gEyeWorldPos", se->cam->cameraPosition);
 	shad->setMat4("gWorld", gWorld);
 	shad->setMat4("gVP", gVP);
 	shad->setFloat("gDispFactor", dispFactor);
@@ -112,7 +112,7 @@ void ReflectablePlane::draw(){
 	shad->setVec4("clipPlane", clipPlane*up);
 	shad->setVec3("u_LightColor", se->lightColor);
 	shad->setVec3("u_LightPosition", se->lightPos);
-	shad->setVec3("u_ViewPosition", se->cam->Position);
+	shad->setVec3("u_ViewPosition", se->cam->cameraPosition);
 	shad->setVec3("fogColor", se->altFog);
 	shad->setVec3("rockColor", rockColor);
 	shad->setVec3("seed", se->seed);
@@ -173,8 +173,8 @@ void ReflectablePlane::setPositionsArray(std::vector<glm::vec2> & pos) {
 }
 
 bool ReflectablePlane::inTile(const Camera camera, glm::vec2 pos) {
-	float camX = camera.Position.x;
-	float camY = camera.Position.z;
+	float camX = camera.cameraPosition.x;
+	float camY = camera.cameraPosition.z;
 
 	float x = pos.x;
 	float y = pos.y;
@@ -207,7 +207,7 @@ ReflectablePlane::~ReflectablePlane()
 
 void ReflectablePlane::updateTilesPositions() {
 	Scene* se = Drawable::scene;
-	glm::vec2 camPosition(se->cam->Position.x, se->cam->Position.z);
+	glm::vec2 camPosition(se->cam->cameraPosition.x, se->cam->cameraPosition.z);
 	int whichTile = -1;
 	int howManyTiles = 0;
 

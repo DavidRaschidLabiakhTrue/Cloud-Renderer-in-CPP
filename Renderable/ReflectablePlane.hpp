@@ -43,6 +43,13 @@ public:
 	//Model * planeModel;
 	PlaneCounter * waterPtr = NULL;
 
+	ReflectablePlane& setUp(float scale)
+	{
+		this->up = scale;
+
+		return *this;
+	}
+
 	void setOctaves(int oct) {
 		if (oct > 0) octaves = oct;
 	}

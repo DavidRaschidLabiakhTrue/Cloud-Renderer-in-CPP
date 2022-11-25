@@ -28,9 +28,9 @@ void VolumetricClouds::draw()
 	cloudData.setFloat("iTime", glfwGetTime());
 	cloudData.setMat4("inv_proj", glm::inverse(s->proj));
 	cloudData.setMat4("inv_view", glm::inverse(s->cam->GetViewMatrix()));
-	cloudData.setVec3("cameraPosition", s->cam->Position);
+	cloudData.setVec3("cameraPosition", s->cam->cameraPosition);
 	cloudData.setFloat("FOV", s->cam->Zoom);
-	cloudData.setVec3("lightDirection", glm::normalize(s->lightPos - s->cam->Position));
+	cloudData.setVec3("lightDirection", glm::normalize(s->lightPos - s->cam->cameraPosition));
 	cloudData.setVec3("lightColor", s->lightColor);
 	
 	cloudData.setFloat("coverage_multiplier", model->coverage);
@@ -96,7 +96,7 @@ void VolumetricClouds::draw()
 		cloudsPPShader.setVec4("lightPos", pos);
 
 		bool isLightInFront = false;
-		float lightDotCameraFront = glm::dot(glm::normalize(s->lightPos - s->cam->Position), glm::normalize(s->cam->Front));
+		float lightDotCameraFront = glm::dot(glm::normalize(s->lightPos - s->cam->cameraPosition), glm::normalize(s->cam->cameraFront));
 		//std::cout << "light dot camera front= " << lightDotCameraFront << std::endl;
 		if (lightDotCameraFront > 0.2) {
 			isLightInFront = true;
