@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="BuildExternal">
+      <UniqueIdentifier>{72f902f7-7400-4d77-bea6-8f4d00bd1273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{c8177bc9-0e44-41e1-af5d-925da1c5666f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{7c80a8ad-77ae-4be6-96f3-6552fb268231}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{f081b356-6e9a-4cf1-84f2-54f7d9749ebc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader">
+      <UniqueIdentifier>{edbd287e-3d11-4984-978f-8ee682ec2f35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\PostProcess">
+      <UniqueIdentifier>{f501bd7e-40d1-43d1-9e83-10986a0c221f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GLUtility">
+      <UniqueIdentifier>{a09ee162-3f9a-4a4e-a7ca-4ad8b96e65de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{591ddab4-bd8a-48ed-b2aa-578bfaf70849}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\ImGUI Implementation">
+      <UniqueIdentifier>{b23c846b-a4f9-49ff-aadb-f16a19a05cf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\GUI">
+      <UniqueIdentifier>{ee0069a6-e3e3-4c39-8b0e-a89c640c0a76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderable">
+      <UniqueIdentifier>{9e0e3b98-5ca6-42b0-8d72-2f5fcb6fe623}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildExternal\glad.c">
+      <Filter>BuildExternal</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildExternal\stb_image.cpp">
+      <Filter>BuildExternal</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildExternal\stb_image_write.cpp">
+      <Filter>BuildExternal</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostProcess.cpp">
+      <Filter>Shaders\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\BaseShader.cpp">
+      <Filter>Shaders\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\shader.cpp">
+      <Filter>Shaders\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Window.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\buffers.cpp">
+      <Filter>GLUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\texture.cpp">
+      <Filter>GLUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\utils.cpp">
+      <Filter>GLUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_glfw.cpp">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_opengl3.cpp">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawableObjects\DrawableClouds.cpp">
+      <Filter>Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawableObjects\Drawable.cpp">
+      <Filter>Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawableObjects\GUI.cpp">
+      <Filter>GUI\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawableObjects\PlaneCounter.cpp">
+      <Filter>Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawableObjects\ReflectablePlane.cpp">
+      <Filter>Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawableObjects\Skybox.cpp">
+      <Filter>Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawableObjects\VolumetricClouds.cpp">
+      <Filter>Renderable</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\PostProcess.hpp">
+      <Filter>Shaders\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\BaseShader.hpp">
+      <Filter>Shaders\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Shader.hpp">
+      <Filter>Shaders\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Window.hpp">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\buffers.hpp">
+      <Filter>GLUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Texture.hpp">
+      <Filter>GLUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utils.hpp">
+      <Filter>GLUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_glfw.h">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_opengl3.h">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_truetype.h">
+      <Filter>GUI\ImGUI Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Camera.hpp">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ft2build.h">
+      <Filter>BuildExternal</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\stb_image.h">
+      <Filter>BuildExternal</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\stb_image_write.h">
+      <Filter>BuildExternal</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\mesh.h">
+      <Filter>Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\model.h">
+      <Filter>Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableObjects\DrawableClouds.hpp">
+      <Filter>Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableObjects\Drawable.hpp">
+      <Filter>Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableObjects\GUI.hpp">
+      <Filter>GUI\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableObjects\PlaneCounter.hpp">
+      <Filter>Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableObjects\ReflectablePlane.hpp">
+      <Filter>Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableObjects\Skybox.hpp">
+      <Filter>Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableObjects\VolumetricClouds.hpp">
+      <Filter>Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableObjects\Scene.hpp">
+      <Filter>Renderable</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
