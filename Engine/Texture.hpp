@@ -1,5 +1,6 @@
 #pragma once
-#include <stb_image.h>
+
+#include "../Include/stb/stb_image.h"
 #include <string>
 #include <iostream>
 #include <vector>
