@@ -156,7 +156,7 @@
     <ClCompile Include="Engine\buffers.cpp" />
     <ClCompile Include="Engine\PostProcess.cpp" />
     <ClCompile Include="Engine\shader.cpp" />
-    <ClCompile Include="Engine\texture.cpp" />
+    <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\utils.cpp" />
     <ClCompile Include="Engine\Window.cpp" />
     <ClCompile Include="Include\imgui\imgui.cpp" />

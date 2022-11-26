@@ -124,16 +124,10 @@ void ReflectablePlane::draw()
 	shader->setVec3("rockColor", planeColor);
 	shader->setVec3("seed", se->seed);
 
-	//shader->setInt("octaves", planeOctaves);
-	//shader->setFloat("freq", planeFrequencyFactor);
-	//shader->setFloat("u_grassCoverage", planeCoverage);
-	//shader->setFloat("waterHeight", 0);
-	//shader->setFloat("tessMultiplier", planeFractureMultiplier);
-	//shader->setFloat("fogFalloff", planeFallOff*1.e-6);
+
 	shader->setFloat("power", planeFracturePower);
 
-	//shader->setBool("normals", true);
-	//shader->setBool("drawFog", ReflectablePlane::drawFog);
+
 
 
 	
