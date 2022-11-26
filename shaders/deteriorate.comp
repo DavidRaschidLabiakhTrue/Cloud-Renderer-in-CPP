@@ -15,20 +15,18 @@ layout (rgba8, binding = 0) uniform image2D outWeatherTex;
 
 uniform vec3 seed;
 
-// =====================================================================================
-// COMMON
+
 float random2D( in vec2 st ) 
 {
     return fract( sin(dot( st.xy, vec2(12.9898,78.233 ) + seed.xy ) ) * 43758.5453123);
 }
 
-// =====================================================================================
-// PERLIN NOISE SPECIFIC
 
-uniform float perlinAmplitude = 0.5;
-uniform float perlinFrequency = 0.8;
-uniform float perlinScale = 100.0;
-uniform int perlinOctaves = 4;
+
+const float perlinAmplitude = 0.5;
+const float perlinFrequency = 0.8;
+const float perlinScale = 100.0;
+const int perlinOctaves = 4;
 
 float noiseInterpolation(in vec2 i_coord, in float i_size)
 {
@@ -70,7 +68,7 @@ float perlinNoise(vec2 uv, float sc, float f, float a, int o)
 	return noiseValue * noiseValue;
 }
 
-// =====================================================================================
+
 
 
 void main()
@@ -81,10 +79,6 @@ void main()
 	vec2 suv = vec2(uv.x + 5.5, uv.y + 5.5);
 
 	float cloudType = clamp(perlinNoise(suv, perlinScale*3.0, 0.3, 0.7,10), 0.0, 1.0);
-	//float cloudType_ = clamp(perlinNoise(suv.xy, perlinScale/ 8., 0.3, 0.7,10), 0.0, 1.0);
-
-	//cloudType = cloudType*0.5 + cloudType_*0.5;
-
 	float coverage = perlinNoise(uv, perlinScale*0.95, perlinFrequency, perlinAmplitude, 4);
 	vec4 weather = vec4( clamp(coverage, 0, 1), cloudType, 0, 1);
 

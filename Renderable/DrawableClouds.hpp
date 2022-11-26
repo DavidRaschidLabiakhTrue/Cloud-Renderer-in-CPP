@@ -35,7 +35,7 @@ class DrawableClouds : public Drawable
 		void generatingModelTexturesData();
 		Shader * volumetricCloudsShader;
 		PostProcessor* postProcessingShader;
-		Shader * weatherShader;
+		Shader * deteriorationShader;
 		float perlinFrequency;
 		bool postProcess;
 		float cloudAbsorption;

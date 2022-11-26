@@ -1,13 +1,5 @@
 #version 430 core
 
-// Special thanks to Nadir Román Guerrero https://github.com/NadirRoGue for inspiring me doing this work!
-// Thanks to WFP from gamedev.net and the rest of the community who partecipated at this topic https://www.gamedev.net/forums/topic/680832-horizonzero-dawn-cloud-system/?page=6
-// WFP web site http://roar11.com/
-// Thanks to reinder and his beautiful Himalayas https://www.shadertoy.com/view/MdGfzh 
-// Reinder https://www.shadertoy.com/user/reinder 
-// Thanks to Rikard Olajos https://github.com/rikardolajos/clouds
-// Thanks to Clay John https://github.com/clayjohn/realtime_clouds
-
 layout(local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 
 layout(rgba32f, binding = 0) uniform image2D fragColor;
@@ -290,23 +282,27 @@ float sampleCloudDensity(vec3 p, bool expensive, float lod){
 	return clamp(base_cloud_with_coverage, 0.0, 1.0);
 }
 
+// https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law
 
-float beer(float d){
+float beer(float d)
+{
 	return exp(-d);
 }
 
-float powder(float d){
+float powder(float d)
+{
 	return (1. - exp(-2.*d));
 
 }
 
 
- float phase(vec3 inLightVec, vec3 inViewVec, float g) {
+ float phase(vec3 inLightVec, vec3 inViewVec, float g) 
+ {
 	float costheta = dot(inLightVec, inViewVec) / length(inLightVec) / length(inViewVec);
 	return HG(costheta, g);
 }
 
- vec3 eye = cameraPosition;
+vec3 eye = cameraPosition;
 
 uniform float absorption = 0.0035;
 

@@ -208,8 +208,8 @@
     <ClInclude Include="Renderable\VolumetricClouds.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\clouds_post.frag" />
-    <None Include="shaders\perlinworley.comp" />
+    <None Include="shaders\CloudsPostProcessor.frag" />
+    <None Include="shaders\PerlinWorley.comp" />
     <None Include="shaders\PlaneCounter.frag" />
     <None Include="shaders\PlaneCounter.vert" />
     <None Include="shaders\post_processing.frag" />
@@ -219,8 +219,8 @@
     <None Include="shaders\ReflectablePlane.frag" />
     <None Include="shaders\ReflectablePlane.vert" />
     <None Include="shaders\volumetric_clouds.comp" />
-    <None Include="shaders\weather.comp" />
-    <None Include="shaders\worley.comp" />
+    <None Include="shaders\deteriorate.comp" />
+    <None Include="shaders\Worley.comp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

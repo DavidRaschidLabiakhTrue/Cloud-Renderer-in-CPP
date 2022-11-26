@@ -208,10 +208,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\clouds_post.frag">
+    <None Include="shaders\CloudsPostProcessor.frag">
       <Filter>Shaders\ShaderCode</Filter>
     </None>
-    <None Include="shaders\perlinworley.comp">
+    <None Include="shaders\PerlinWorley.comp">
       <Filter>Shaders\ShaderCode</Filter>
     </None>
     <None Include="shaders\PlaneCounter.frag">
@@ -241,10 +241,10 @@
     <None Include="shaders\volumetric_clouds.comp">
       <Filter>Shaders\ShaderCode</Filter>
     </None>
-    <None Include="shaders\weather.comp">
+    <None Include="shaders\deteriorate.comp">
       <Filter>Shaders\ShaderCode</Filter>
     </None>
-    <None Include="shaders\worley.comp">
+    <None Include="shaders\Worley.comp">
       <Filter>Shaders\ShaderCode</Filter>
     </None>
   </ItemGroup>

@@ -94,10 +94,10 @@ class TimeOfDayOperator // runs on 24 hour intervals,  not 12 & 12 due to comple
 
 			col = access(timeOfDay);
 
-			if (col.upperAtmosphereColor != lastCol.upperAtmosphereColor || col.lowerAtmosphereColor != lastCol.lowerAtmosphereColor)
-			{
-				cout << "new color" << to_string(col.upperAtmosphereColor) << " " << to_string(col.lowerAtmosphereColor) << std::endl;
-			}
+			//if (col.upperAtmosphereColor != lastCol.upperAtmosphereColor || col.lowerAtmosphereColor != lastCol.lowerAtmosphereColor)
+			//{
+			//	cout << "new color" << to_string(col.upperAtmosphereColor) << " " << to_string(col.lowerAtmosphereColor) << std::endl;
+			//}
 		}
 
 		void generate() // brute force method, precomputes to associate time and minute color gradients
@@ -144,23 +144,35 @@ class TimeOfDayOperator // runs on 24 hour intervals,  not 12 & 12 due to comple
 
 			map.reserve(totalElements);
 
+			float mappedIndex;
+			float mappedMultiplier;
+
 			for (int i = 0; i < 23; i++) // 24 hours;
 			{
+
+				mappedIndex = float((i % 3)) + 1.0f; // we don't want this at 0 so + 1 to bring this into range of 1-3;
+				
 				for (int j = 0; j < 59; j++) // 60 minutes
 				{
 					// very much a hard coded solution
+
+					mappedMultiplier = float(j) / 60.0f;
+
 					switch (i)
 					{
 						case 0: // midnight
 						case 1:
 						case 2:
+
 							fromUpper = midNightUpper;
 							fromLower = midNightLower;
 
 							toUpper = deepMorningUpper;
 							toLower = deepMorningLower;
-							
 
+							
+							
+							
 							break;
 						case 3: // deep morning
 						case 4:
@@ -171,6 +183,7 @@ class TimeOfDayOperator // runs on 24 hour intervals,  not 12 & 12 due to comple
 							toUpper = earlyMorningUpper;
 							toLower = earlyMorningLower;
 
+							
 							break;
 						case 6: // early morning
 						case 7:
@@ -181,6 +194,7 @@ class TimeOfDayOperator // runs on 24 hour intervals,  not 12 & 12 due to comple
 							toUpper = dawnUpper;
 							toLower = dawnLower;
 
+						
 							break;
 						case 9: // dawn
 						case 10:
@@ -191,6 +205,7 @@ class TimeOfDayOperator // runs on 24 hour intervals,  not 12 & 12 due to comple
 							toUpper = noonUpper;
 							toLower = noonLower;
 
+							
 							break;
 						case 12: // noon
 						case 13:
@@ -201,6 +216,7 @@ class TimeOfDayOperator // runs on 24 hour intervals,  not 12 & 12 due to comple
 							toUpper = afternoonUpper;
 							toLower = afternoonLower;
 
+							
 							break;
 						case 15: // afternoon
 						case 16:
@@ -211,6 +227,7 @@ class TimeOfDayOperator // runs on 24 hour intervals,  not 12 & 12 due to comple
 							toUpper = sunsetUpper;
 							toLower = sunsetLower;
 
+							
 							break;
 						case 18: // evening
 						case 19:
@@ -221,6 +238,7 @@ class TimeOfDayOperator // runs on 24 hour intervals,  not 12 & 12 due to comple
 							toUpper = nightUpper;
 							toLower = nightLower;
 
+							
 							break;
 
 						case 21: // night
@@ -232,25 +250,27 @@ class TimeOfDayOperator // runs on 24 hour intervals,  not 12 & 12 due to comple
 							toUpper = midNightUpper;
 							toLower = midNightLower;
 							
+							
 							break;
 					}
-
-					map[TimeOfDay(i, j)] = AtmosphereColors(toUpper, toLower);
+					
+					map[TimeOfDay(i, j)] = AtmosphereColors(glm::mix(fromUpper, toUpper, mappedIndex * mappedMultiplier), glm::mix(fromLower, toLower, mappedIndex * mappedMultiplier));
+					
 				}
 			}
 			print();
 		}
 		void print()
 		{
-			if (map.size() > 0)
-			{
-				using std::cout;
-				for (const auto& item : map)
-				{
-					cout << item.first;
-					cout << item.second;
-				}
-			}
+			//if (map.size() > 0)
+			//{
+			//	using std::cout;
+			//	for (const auto& item : map)
+			//	{
+			//		cout << item.first;
+			//		cout << item.second;
+			//	}
+			//}
 		}
 
 		AtmosphereColors access(const TimeOfDay& timeOfDay)

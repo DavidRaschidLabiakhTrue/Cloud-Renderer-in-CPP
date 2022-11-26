@@ -11,44 +11,30 @@ Skybox::Skybox() : timeOperator()
 
 	skyboxShader = new PostProcessor("shaders/sky.frag");
 	skyboxFBO = new FrameBufferObject(Window::ScreenWidth, Window::ScreenHeight);
-	SunsetPreset1();
-	DefaultPreset();
-}
 
-void Skybox::setGui() 
-{
-	ImGui::Begin(" ");
-	timeOperator.setGui();
-	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Sky controls");
-	ImGui::ColorEdit3("Upper Atmosphere Color", (float*)&skyColorTop); // Edit 3 floats representing a color
-	ImGui::ColorEdit3("Lower Atmosphere Color", (float*)&skyColorBottom); // Edit 3 floats representing a color
-	ImGui::End();
-}
-
-
-
-PreloadedColor Skybox::SunsetPreset1() 
-{
 	presetSunset.cloudColorBottom = glm::vec3(97, 98, 120) / 255.f;
 	presetSunset.skyColorTop = glm::vec3(133, 158, 214) / 255.f;
 	presetSunset.skyColorBottom = glm::vec3(241, 161, 161) / 255.f;
 	presetSunset.lightColor = glm::vec3(255, 201, 201) / 255.f;
 	presetSunset.fogColor = glm::vec3(128, 153, 179) / 255.f;
-
-	return presetSunset;
-}
-
-
-PreloadedColor Skybox::DefaultPreset() 
-{
-	highSunPreset.cloudColorBottom = (glm::vec3(65., 70., 80.)*(1.5f / 255.f));
-	highSunPreset.skyColorTop = glm::vec3(0.5, 0.7, 0.8)*1.05f;
+	highSunPreset.cloudColorBottom = (glm::vec3(65., 70., 80.) * (1.5f / 255.f));
+	highSunPreset.skyColorTop = glm::vec3(0.5, 0.7, 0.8) * 1.05f;
 	highSunPreset.skyColorBottom = glm::vec3(0.9, 0.9, 0.95);
 	highSunPreset.lightColor = glm::vec3(255, 255, 230) / 255.f;
 	highSunPreset.fogColor = glm::vec3(0.5, 0.6, 0.7);
-
-	return highSunPreset;
 }
+
+void Skybox::setGui() 
+{
+	ImGui::Begin(" ");
+	
+	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Time Of Day Controls");
+	timeOperator.setGui();
+	ImGui::End();
+}
+
+
+
 
 void Skybox::mixSkyColorPreset(float v, PreloadedColor p1, PreloadedColor p2) 
 {
@@ -65,19 +51,14 @@ void Skybox::draw()
 {
 	Scene * s = Drawable::scene;
 	skyboxFBO->bind();
-
 	Shader& shader = skyboxShader->getShader();
 	shader.use();
-
 	shader.setVec2("resolution", glm::vec2(Window::ScreenWidth, Window::ScreenHeight));
 	shader.setMat4("inv_proj", glm::inverse(s->proj));
 	shader.setMat4("inv_view", glm::inverse(s->cam->GetViewMatrix()));
-	
 	shader.setVec3("lightDirection", glm::normalize(s->lightPos - s->cam->cameraPosition));
-
 	shader.setVec3("skyColorTop", skyColorTop);
 	shader.setVec3("skyColorBottom", skyColorBottom);
-
 	skyboxShader->draw();
 }
 

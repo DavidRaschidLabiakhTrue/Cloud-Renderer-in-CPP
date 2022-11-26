@@ -33,9 +33,7 @@ class Skybox : public Drawable
 		{
 			return skyboxFBO->textureID;
 		}
-		PreloadedColor DefaultPreset();
-		
-		PreloadedColor SunsetPreset1();
+
 		PreloadedColor presetSunset, highSunPreset;
 		friend class VolumetricClouds;
 

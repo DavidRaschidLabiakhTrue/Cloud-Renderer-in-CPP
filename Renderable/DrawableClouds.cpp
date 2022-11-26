@@ -44,9 +44,10 @@ DrawableClouds::DrawableClouds(Scene * scene, Skybox * sky) : scene(scene), sky(
 void DrawableClouds::launchCloudShaders()
 {
 	volumetricCloudsShader = new Shader("volumetricCloudsShader", "shaders/volumetric_clouds.comp");
-	postProcessingShader = new PostProcessor("shaders/clouds_post.frag");
-	weatherShader = new Shader("weatherMap");
-	weatherShader->attachShader("shaders/weather.comp")->linkPrograms();
+	postProcessingShader = new PostProcessor("shaders/CloudsPostProcessor.frag");
+
+	deteriorationShader = new Shader("deteriorate");
+	deteriorationShader->attachShader("shaders/deteriorate.comp")->linkPrograms();
 }
 
 void DrawableClouds::generatingModelTexturesData()
@@ -54,44 +55,31 @@ void DrawableClouds::generatingModelTexturesData()
 
 	if (!perlinID) 
 	{
-		Shader comp("perlinWorley");
-		comp.attachShader("shaders/perlinworley.comp");
-		comp.linkPrograms();
+		Shader comp("PerlinWorleyCompute");
+		comp.attachShader("shaders/PerlinWorley.comp")->linkPrograms();
 
-	
 		this->perlinID = generateTexture3D(128, 128, 128);
-
 		comp.use();
 		comp.setVec3("u_resolution", glm::vec3(128, 128, 128));
-		std::cout << "computing perlinworley!" << std::endl;
 		glActiveTexture(GL_TEXTURE0);
 		comp.setInt("outVolTex", 0);
 		glBindTexture(GL_TEXTURE_3D, this->perlinID);
 	  	glBindImageTexture(0, this->perlinID, 0, GL_TRUE, 0, GL_READ_WRITE, GL_RGBA8);
 		glDispatchCompute(INT_CEIL(128, 4), INT_CEIL(128, 4), INT_CEIL(128, 4));
-		std::cout << "computed!!" << std::endl;
+
 		glGenerateMipmap(GL_TEXTURE_3D);
 	}
 
 	if (!worleyID) 
 	{
-
-		Shader worley_git("worleyComp");
-		worley_git.attachShader("shaders/worley.comp");
-		worley_git.linkPrograms();
-
-
+		Shader worleyComputer("WorleyCompute");
+		worleyComputer.attachShader("shaders/Worley.comp")->linkPrograms();
 		this->worleyID = generateTexture3D(32, 32, 32);
-
-
-		worley_git.use();
-
+		worleyComputer.use();
 		glActiveTexture(GL_TEXTURE0);
 	  	glBindTexture(GL_TEXTURE_3D, this->worleyID);
 	  	glBindImageTexture(0, this->worleyID, 0, GL_TRUE, 0, GL_READ_WRITE, GL_RGBA8);
-		std::cout << "computing worley 32!" << std::endl;
 		glDispatchCompute(INT_CEIL(32, 4), INT_CEIL(32, 4), INT_CEIL(32, 4));
-		std::cout << "computed!!" << std::endl;
 		glGenerateMipmap(GL_TEXTURE_3D);
 	}
 
@@ -108,7 +96,7 @@ DrawableClouds::~DrawableClouds()
 {
 	delete volumetricCloudsShader;
 	delete postProcessingShader;
-	delete weatherShader;
+	delete deteriorationShader;
 }
 
 void DrawableClouds::update()
@@ -124,12 +112,10 @@ void DrawableClouds::update()
 void DrawableClouds::generatingWeatherMapData() 
 {
 	bindTexture2D(weatheringID, 0);
-	weatherShader->use();
-	weatherShader->setVec3("seed", scene->seed);
-	weatherShader->setFloat("perlinFrequency", perlinFrequency);
-	std::cout << "computing weather!" << std::endl;
+	deteriorationShader->use();
+	deteriorationShader->setVec3("seed", scene->seed);
+	deteriorationShader->setFloat("perlinFrequency", perlinFrequency);
 	glDispatchCompute(INT_CEIL(1024, 8), INT_CEIL(1024, 8), 1);
-	std::cout << "weather computed!!" << std::endl;
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 }
 
