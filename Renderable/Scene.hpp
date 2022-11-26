@@ -3,7 +3,7 @@
 
 #include <Camera.hpp>
 #include <glm/glm.hpp>
-#include "../Engine/buffers.hpp"
+#include "../CoreWorkerBackend/buffers.hpp"
 #include <random>
 
 using glm::vec3;

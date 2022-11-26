@@ -1,10 +1,10 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_access.hpp>
-#include "../Engine/Shader.hpp"
-#include "../Engine/buffers.hpp"
+#include "../CoreWorkerBackend/Shader.hpp"
+#include "../CoreWorkerBackend/buffers.hpp"
 #include <GLFW/glfw3.h>
-#include "../Engine/Window.hpp"
+#include "../CoreWorkerBackend/Window.hpp"
 #include "Drawable.hpp"
 
 // we must load counter information to the plane in order to get the space rendering

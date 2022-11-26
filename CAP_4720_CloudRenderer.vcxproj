@@ -152,13 +152,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BuildExternal\glad.c" />
-    <ClCompile Include="Engine\BaseShader.cpp" />
-    <ClCompile Include="Engine\buffers.cpp" />
-    <ClCompile Include="Engine\PostProcess.cpp" />
-    <ClCompile Include="Engine\shader.cpp" />
-    <ClCompile Include="Engine\Texture.cpp" />
-    <ClCompile Include="Engine\utils.cpp" />
-    <ClCompile Include="Engine\Window.cpp" />
+    <ClCompile Include="CoreWorkerBackend\BaseShader.cpp" />
+    <ClCompile Include="CoreWorkerBackend\buffers.cpp" />
+    <ClCompile Include="CoreWorkerBackend\PostProcess.cpp" />
+    <ClCompile Include="CoreWorkerBackend\shader.cpp" />
+    <ClCompile Include="CoreWorkerBackend\Texture.cpp" />
+    <ClCompile Include="CoreWorkerBackend\utils.cpp" />
+    <ClCompile Include="CoreWorkerBackend\Window.cpp" />
     <ClCompile Include="Include\imgui\imgui.cpp" />
     <ClCompile Include="Include\imgui\imgui_demo.cpp" />
     <ClCompile Include="Include\imgui\imgui_draw.cpp" />
@@ -177,13 +177,13 @@
     <ClCompile Include="Renderable\VolumetricClouds.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\BaseShader.hpp" />
-    <ClInclude Include="Engine\buffers.hpp" />
-    <ClInclude Include="Engine\PostProcess.hpp" />
-    <ClInclude Include="Engine\Shader.hpp" />
-    <ClInclude Include="Engine\Texture.hpp" />
-    <ClInclude Include="Engine\Utils.hpp" />
-    <ClInclude Include="Engine\Window.hpp" />
+    <ClInclude Include="CoreWorkerBackend\BaseShader.hpp" />
+    <ClInclude Include="CoreWorkerBackend\buffers.hpp" />
+    <ClInclude Include="CoreWorkerBackend\PostProcess.hpp" />
+    <ClInclude Include="CoreWorkerBackend\Shader.hpp" />
+    <ClInclude Include="CoreWorkerBackend\Texture.hpp" />
+    <ClInclude Include="CoreWorkerBackend\Utils.hpp" />
+    <ClInclude Include="CoreWorkerBackend\Window.hpp" />
     <ClInclude Include="Include\Camera.hpp" />
     <ClInclude Include="Include\imgui\imconfig.h" />
     <ClInclude Include="Include\imgui\imgui.h" />

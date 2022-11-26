@@ -1,7 +1,7 @@
 #include "Skybox.hpp"
 
 #include "Scene.hpp"
-#include "../Engine/Window.hpp"
+#include "../CoreWorkerBackend/Window.hpp"
 #include "../imgui/imgui.h"
 
 Skybox::Skybox()

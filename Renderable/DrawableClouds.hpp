@@ -1,8 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
-#include "../Engine/Shader.hpp"
+#include "../CoreWorkerBackend/Shader.hpp"
 #include "Scene.hpp"
-#include "../Engine/PostProcess.hpp"
+#include "../CoreWorkerBackend/PostProcess.hpp"
 #include "../imgui/imgui.h"
 #include "Skybox.hpp"
 

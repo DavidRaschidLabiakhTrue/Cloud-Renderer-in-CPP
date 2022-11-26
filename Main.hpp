@@ -5,10 +5,10 @@
 #endif
 #include <GLFW/glfw3.h>
 
-#include "Engine/Window.hpp"
-#include "Engine/Shader.hpp"
-#include "Engine/PostProcess.hpp"
-#include "Engine/Texture.hpp"
+#include "CoreWorkerBackend/Window.hpp"
+#include "CoreWorkerBackend/Shader.hpp"
+#include "CoreWorkerBackend/PostProcess.hpp"
+#include "CoreWorkerBackend/Texture.hpp"
 
 #include "Renderable/VolumetricClouds.hpp"
 #include "Renderable/ReflectablePlane.hpp"

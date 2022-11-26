@@ -45,27 +45,6 @@
     <ClCompile Include="BuildExternal\glad.c">
       <Filter>BuildExternal</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\PostProcess.cpp">
-      <Filter>Shaders\PostProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\BaseShader.cpp">
-      <Filter>Shaders\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\shader.cpp">
-      <Filter>Shaders\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Window.cpp">
-      <Filter>Window</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\buffers.cpp">
-      <Filter>GLUtility</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Texture.cpp">
-      <Filter>GLUtility</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\utils.cpp">
-      <Filter>GLUtility</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
@@ -114,29 +93,29 @@
     <ClCompile Include="Include\stb\stb_image_write.cpp">
       <Filter>BuildExternal</Filter>
     </ClCompile>
+    <ClCompile Include="CoreWorkerBackend\Window.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="CoreWorkerBackend\Texture.cpp">
+      <Filter>GLUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="CoreWorkerBackend\utils.cpp">
+      <Filter>GLUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="CoreWorkerBackend\buffers.cpp">
+      <Filter>GLUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="CoreWorkerBackend\PostProcess.cpp">
+      <Filter>Shaders\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="CoreWorkerBackend\shader.cpp">
+      <Filter>Shaders\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="CoreWorkerBackend\BaseShader.cpp">
+      <Filter>Shaders\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\PostProcess.hpp">
-      <Filter>Shaders\PostProcess</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\BaseShader.hpp">
-      <Filter>Shaders\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Shader.hpp">
-      <Filter>Shaders\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Window.hpp">
-      <Filter>Window</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\buffers.hpp">
-      <Filter>GLUtility</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Texture.hpp">
-      <Filter>GLUtility</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Utils.hpp">
-      <Filter>GLUtility</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Camera.hpp">
       <Filter>Camera</Filter>
     </ClInclude>
@@ -196,6 +175,27 @@
     </ClInclude>
     <ClInclude Include="Main.hpp">
       <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreWorkerBackend\Window.hpp">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreWorkerBackend\Texture.hpp">
+      <Filter>GLUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreWorkerBackend\Utils.hpp">
+      <Filter>GLUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreWorkerBackend\buffers.hpp">
+      <Filter>GLUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreWorkerBackend\PostProcess.hpp">
+      <Filter>Shaders\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreWorkerBackend\Shader.hpp">
+      <Filter>Shaders\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreWorkerBackend\BaseShader.hpp">
+      <Filter>Shaders\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

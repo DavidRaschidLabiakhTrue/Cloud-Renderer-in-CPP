@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "../Engine/PostProcess.hpp"
+#include "../CoreWorkerBackend/PostProcess.hpp"
 #include "Drawable.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
