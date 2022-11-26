@@ -1,7 +1,7 @@
 #include "DrawableClouds.hpp"
 #include <glad/glad.h>
 #include "../CoreWorkerBackend/Texture.hpp"
-
+#include "../ProjectExtras/TimeOfDay.hpp"
 
 
 void DrawableClouds::setGui() {
@@ -46,8 +46,8 @@ void DrawableClouds::launchCloudShaders()
 	volumetricCloudsShader = new Shader("volumetricCloudsShader", "shaders/volumetric_clouds.comp");
 	postProcessingShader = new PostProcessor("shaders/CloudsPostProcessor.frag");
 
-	deteriorationShader = new Shader("deteriorate");
-	deteriorationShader->attachShader("shaders/deteriorate.comp")->linkPrograms();
+	deteriorationShader = new Shader("deteriorate", "shaders/deteriorate.comp");
+	
 }
 
 void DrawableClouds::generatingModelTexturesData()
@@ -60,9 +60,9 @@ void DrawableClouds::generatingModelTexturesData()
 
 		this->perlinID = generateTexture3D(128, 128, 128);
 		comp.use();
-		comp.setVec3("u_resolution", glm::vec3(128, 128, 128));
+		comp.uploadVector3ToGPU("u_resolution", glm::vec3(128, 128, 128));
 		glActiveTexture(GL_TEXTURE0);
-		comp.setInt("outVolTex", 0);
+		comp.uploadIntToGPU("outVolTex", 0);
 		glBindTexture(GL_TEXTURE_3D, this->perlinID);
 	  	glBindImageTexture(0, this->perlinID, 0, GL_TRUE, 0, GL_READ_WRITE, GL_RGBA8);
 		glDispatchCompute(INT_CEIL(128, 4), INT_CEIL(128, 4), INT_CEIL(128, 4));
@@ -113,8 +113,8 @@ void DrawableClouds::generatingWeatherMapData()
 {
 	bindTexture2D(weatheringID, 0);
 	deteriorationShader->use();
-	deteriorationShader->setVec3("seed", scene->seed);
-	deteriorationShader->setFloat("perlinFrequency", perlinFrequency);
+	deteriorationShader->uploadVector3ToGPU("seed", scene->seed);
+	deteriorationShader->uploadFloatToGPU("perlinFrequency", perlinFrequency);
 	glDispatchCompute(INT_CEIL(1024, 8), INT_CEIL(1024, 8), 1);
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 }
@@ -134,8 +134,8 @@ void DrawableClouds::launchVariables()
 	postProcess = true;
 	seed = glm::vec3(0.0, 0.0, 0.0);
 	oldSeed = glm::vec3(0.0, 0.0, 0.0);
-	cloudColorTop = (glm::vec3(169., 149., 149.)*(1.5f / 255.f));
-	cloudColorBottom = (glm::vec3(65., 70., 80.)*(1.5f / 255.f));
+	cloudColorTop = (glm::vec3(169., 149., 149.)*(1.5f ToScale));
+	cloudColorBottom = (glm::vec3(65., 70., 80.)*(1.5f ToScale));
 	weatheringID = 0;
 	perlinID = 0;
 	worleyID = 0;

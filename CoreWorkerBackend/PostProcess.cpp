@@ -8,7 +8,7 @@ PostProcessor::PostProcessor(const char * fragmentPath)
 {
 	initialize();
 	shader = new Shader("ScreenQuad_" + getShaderName(fragmentPath));
-	shader->attachShader(BaseShader("shaders/screen.vert"))->attachShader(BaseShader(fragmentPath))->linkPrograms();
+	shader->attachShader(CoreShaderBasis("shaders/screen.vert"))->attachShader(CoreShaderBasis(fragmentPath))->linkPrograms();
 }
 
 void PostProcessor::drawQuad() {

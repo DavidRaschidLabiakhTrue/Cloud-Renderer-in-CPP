@@ -53,8 +53,8 @@ void PlaneCounter::draw()
 	shader->use();
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	shader->setMat4("modelMatrix", modelMatrix);
-	shader->setMat4("gVP", Drawable::scene->proj * Drawable::scene->cam->GetViewMatrix());
+	shader->uploadMatrix4ToGPU("modelMatrix", modelMatrix);
+	shader->uploadMatrix4ToGPU("gVP", Drawable::scene->proj * Drawable::scene->cam->GetViewMatrix());
 	this->drawVertices();
 	glDisable(GL_BLEND);
 }

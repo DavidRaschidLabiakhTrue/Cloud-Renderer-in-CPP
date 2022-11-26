@@ -152,7 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BuildExternal\glad.c" />
-    <ClCompile Include="CoreWorkerBackend\BaseShader.cpp" />
+    <ClCompile Include="CoreWorkerBackend\CoreShaderBasis.cpp" />
     <ClCompile Include="CoreWorkerBackend\buffers.cpp" />
     <ClCompile Include="CoreWorkerBackend\PostProcess.cpp" />
     <ClCompile Include="CoreWorkerBackend\Shader.cpp" />
@@ -178,7 +178,7 @@
     <ClCompile Include="Renderable\VolumetricClouds.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CoreWorkerBackend\BaseShader.hpp" />
+    <ClInclude Include="CoreWorkerBackend\CoreShaderBasis.hpp" />
     <ClInclude Include="CoreWorkerBackend\buffers.hpp" />
     <ClInclude Include="CoreWorkerBackend\PostProcess.hpp" />
     <ClInclude Include="CoreWorkerBackend\Shader.hpp" />

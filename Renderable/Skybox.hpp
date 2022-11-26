@@ -27,7 +27,7 @@ class Skybox : public Drawable
 
 
 
-		void mixSkyColorPreset(float v, PreloadedColor p1, PreloadedColor p2);
+		void mergedLoadedColors(float v, PreloadedColor p1, PreloadedColor p2);
 
 		unsigned int getSkyTexture() 
 		{

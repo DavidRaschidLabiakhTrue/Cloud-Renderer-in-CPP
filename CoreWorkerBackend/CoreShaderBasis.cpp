@@ -1,10 +1,10 @@
-#include "BaseShader.hpp"
+#include "CoreShaderBasis.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
 
-BaseShader::BaseShader(const char * shaderPathChar)
+CoreShaderBasis::CoreShaderBasis(const char * shaderPathChar)
 {
 	shaderPath = std::string(shaderPathChar);
 	std::string shaderCode = loadShaderFromFile(shaderPathChar);
@@ -45,7 +45,7 @@ bool checkCompileErrors(unsigned int shader, std::string type, std::string shade
 	return success;
 }
 
-std::string BaseShader::loadShaderFromFile(const char* shaderPath) {
+std::string CoreShaderBasis::loadShaderFromFile(const char* shaderPath) {
 	std::string shaderCode;
 	std::ifstream shaderFile;
 	shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -120,7 +120,7 @@ ShaderType getShaderType(const char* path) {
 }
 
 
-BaseShader::~BaseShader()
+CoreShaderBasis::~CoreShaderBasis()
 {
 
 }

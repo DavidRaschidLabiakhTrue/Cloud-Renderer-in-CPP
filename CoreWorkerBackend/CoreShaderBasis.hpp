@@ -4,11 +4,10 @@
 
 struct ShaderType 
 {
-	//shaderType(shaderType& shaderT) : type(shaderT.type), name(shaderT.name) {}
 	ShaderType() : typeID(-1), name("") 
 	{
 	}
-	ShaderType(unsigned int type, std::string name) : typeID(type), name(name)\
+	ShaderType(unsigned int type, std::string name) : typeID(type), name(name)
 	{
 	}
 	unsigned int typeID;
@@ -20,11 +19,11 @@ std::string getShaderName(const char* shaderPath);
 bool checkCompileErrors(unsigned int shader, std::string type, std::string shaderName);
 
 
-class BaseShader
+class CoreShaderBasis
 {
 	public:
-		BaseShader(const char * shaderPathChar);
-		virtual ~BaseShader();
+		CoreShaderBasis(const char * shaderPathChar);
+		virtual ~CoreShaderBasis();
 
 		std::string getName() 
 		{

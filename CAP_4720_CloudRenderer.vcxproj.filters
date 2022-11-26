@@ -114,7 +114,7 @@
     <ClCompile Include="CoreWorkerBackend\Shader.cpp">
       <Filter>Shaders\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="CoreWorkerBackend\BaseShader.cpp">
+    <ClCompile Include="CoreWorkerBackend\CoreShaderBasis.cpp">
       <Filter>Shaders\Shader</Filter>
     </ClCompile>
     <ClCompile Include="ProjectExtras\TimeOfDay.cpp">
@@ -200,7 +200,7 @@
     <ClInclude Include="CoreWorkerBackend\Shader.hpp">
       <Filter>Shaders\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="CoreWorkerBackend\BaseShader.hpp">
+    <ClInclude Include="CoreWorkerBackend\CoreShaderBasis.hpp">
       <Filter>Shaders\Shader</Filter>
     </ClInclude>
     <ClInclude Include="ProjectExtras\TimeOfDay.hpp">

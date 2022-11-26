@@ -110,22 +110,22 @@ void ReflectablePlane::draw()
 	glm::mat4 gVP = se->proj * se->cam->GetViewMatrix();
 
 	shader->use();
-	shader->setVec3("gEyeWorldPos", se->cam->cameraPosition);
-	shader->setMat4("gWorld", gWorld);
-	shader->setMat4("gVP", gVP);
-	shader->setFloat("gDispFactor", planeDispersion);
+	shader->uploadVector3ToGPU("gEyeWorldPos", se->cam->cameraPosition);
+	shader->uploadMatrix4ToGPU("gWorld", gWorld);
+	shader->uploadMatrix4ToGPU("gVP", gVP);
+	shader->uploadFloatToGPU("gDispFactor", planeDispersion);
 
 	glm::vec4 clipPlane(0.0, 1.0, 0.0, -0);
-	shader->setVec4("clipPlane", clipPlane*up);
-	shader->setVec3("u_LightColor", se->lightColor);
-	shader->setVec3("u_LightPosition", se->lightPos);
-	shader->setVec3("u_ViewPosition", se->cam->cameraPosition);
-	shader->setVec3("fogColor", se->altFog);
-	shader->setVec3("rockColor", planeColor);
-	shader->setVec3("seed", se->seed);
+	shader->uploadVector4ToGPU("clipPlane", clipPlane*up);
+	shader->uploadVector3ToGPU("u_LightColor", se->lightColor);
+	shader->uploadVector3ToGPU("u_LightPosition", se->lightPos);
+	shader->uploadVector3ToGPU("u_ViewPosition", se->cam->cameraPosition);
+	shader->uploadVector3ToGPU("fogColor", se->altFog);
+	shader->uploadVector3ToGPU("rockColor", planeColor);
+	shader->uploadVector3ToGPU("seed", se->seed);
 
 
-	shader->setFloat("power", planeFracturePower);
+	shader->uploadFloatToGPU("power", planeFracturePower);
 
 
 
