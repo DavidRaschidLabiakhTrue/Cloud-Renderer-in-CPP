@@ -8,28 +8,26 @@ void DrawableClouds::setGui() {
 
 	ImGui::Begin(" ");
 	ImGui::TextColored(ImVec4(.2, .2, 1, 1), "Cloud controls");
+
+
+
+	ImGui::SliderFloat("Cloud Spatial Voxel Sampling", &cloudCoverage, 0.0f, 1.0f);
+	ImGui::SliderFloat("Cloud Travel Speed", &cloudSpeed, 0.0f, 5.0E3);
+	ImGui::SliderFloat("Cloud Sharpness", &cloudCrispiness, 0.0f, 120.0f);
+	ImGui::SliderFloat("Cloud Curl", &cloudCurliness, 0.0f, 3.0f);
+	ImGui::SliderFloat("Cloud Density", &cloudDensity, 0.0f, 0.1f);
+	ImGui::SliderFloat("Sky to Earth Radial Factor", &spatialRadiusOfRenderSpace, 10000.0f, 5000000.0f);
+	ImGui::SliderFloat("Start of Clouds (Height)", &sphereInnerRadius, 1000.0f, 15000.0f);
+	ImGui::SliderFloat("End of Clouds (Height)", &sphereOuterRadius, 1000.0f, 40000.0f);
+	glm::vec3* cloudBottomColor = &cloudColorBottom;
+	ImGui::ColorEdit3("Cloud color", (float*)cloudBottomColor);
 	ImGui::Checkbox("Post Processor", &postProcess);
 
+	//if (ImGui::SliderFloat("Clouds Frequency", &perlinFrequency, 0.0f, 4.0f))
+	//{
+	//	generatingWeatherMapData();
+	//}
 
-	ImGui::SliderFloat("Coverage", &cloudCoverage, 0.0f, 1.0f);
-	ImGui::SliderFloat("Speed", &cloudSpeed, 0.0f, 5.0E3);
-	ImGui::SliderFloat("Crispiness", &cloudCrispiness, 0.0f, 120.0f);
-	ImGui::SliderFloat("Curliness", &cloudCurliness, 0.0f, 3.0f);
-	ImGui::SliderFloat("Density", &cloudDensity, 0.0f, 0.1f);
-	ImGui::SliderFloat("Light absorption", &cloudAbsorption, 0.0f, 1.5f);
-	ImGui::SliderFloat("Sky to Earth Radial Factor", &spatialRadiusOfRenderSpace, 10000.0f, 5000000.0f);
-	ImGui::SliderFloat("Start of Clouds", &sphereInnerRadius, 1000.0f, 15000.0f);
-	ImGui::SliderFloat("End of Clouds", &sphereOuterRadius, 1000.0f, 40000.0f);
-
-	if (ImGui::SliderFloat("Clouds frequency", &perlinFrequency, 0.0f, 4.0f))
-	{
-		generatingWeatherMapData();
-	}
-		
-
-	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Colors");
-	glm::vec3 * cloudBottomColor = &cloudColorBottom;
-	ImGui::ColorEdit3("Cloud color", (float*)cloudBottomColor); // Edit 3 floats representing a color
 
 	ImGui::End();
 }

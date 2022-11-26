@@ -31,7 +31,7 @@ Window::Window(unsigned int scrW, unsigned int scrH, std::string name) : windowN
 	this->WindowPointer = glfwCreateWindow(ScreenWidth, ScreenHeight, name.c_str(), NULL, NULL);
 	if (!this->WindowPointer)
 	{
-		std::cout << "Failed to create GLFW window" << std::endl;
+		std::cout << "GLFW Window Pointer Failure" << std::endl;
 		glfwTerminate();
 		successfulLoad = false;
 		return;
@@ -48,7 +48,7 @@ Window::Window(unsigned int scrW, unsigned int scrH, std::string name) : windowN
 	successfulLoad = gladLoader();
 	if (successfulLoad)
 	{
-		std::cout << "GLFW window correctly initialized!" << std::endl;
+		std::cout << "GLFW Initialized" << std::endl;
 	}
 }
 
@@ -61,10 +61,22 @@ int Window::gladLoader()
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
+		std::cout << "GLAD Initialized" << std::endl;
 		return 0;
 	}
 
+	std::string vendor = reinterpret_cast<char const*>(glGetString(GL_VENDOR));
+	std::string renderer = reinterpret_cast<char const*>(glGetString(GL_RENDERER));
+	std::string version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
+	std::string shaderVersion = reinterpret_cast<char const*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+
+	using std::cout;
+
+	cout << "Vendor: " << vendor << std::endl;
+	cout << "Renderer: " << renderer << std::endl;
+	cout << "Version: " << version << std::endl;
+	cout << "Shader Version: " << shaderVersion << std::endl;
 	return 1;
 }
 
