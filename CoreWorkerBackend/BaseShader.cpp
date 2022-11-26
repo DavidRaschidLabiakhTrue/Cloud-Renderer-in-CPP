@@ -42,9 +42,6 @@ bool checkCompileErrors(unsigned int shader, std::string type, std::string shade
 		}
 	}
 
-	//if (success) {
-	//	std::cout << type + " SHADER SUCCESSFULLY COMPILED AND/OR LINKED!" << std::endl;
-	//}
 	return success;
 }
 
@@ -89,21 +86,41 @@ ShaderType getShaderType(const char* path) {
 		type.erase(0, last_slash_idx + 1);
 	}
 	if (type == "vert")
+	{
 		return ShaderType(GL_VERTEX_SHADER, "VERTEX");
+	}
 	if (type == "frag")
+	{
 		return ShaderType(GL_FRAGMENT_SHADER, "FRAGMENT");
+	}
+		
 	if (type == "tes")
+	{
 		return ShaderType(GL_TESS_EVALUATION_SHADER, "TESS_EVALUATION");
+	}
+
+		
 	if (type == "tcs")
+	{
 		return ShaderType(GL_TESS_CONTROL_SHADER, "TESS_CONTROL");
+	}
+		
 	if (type == "geom")
+	{
 		return ShaderType(GL_GEOMETRY_SHADER, "GEOMETRY");
+	}
+
+
+		
 	if (type == "comp")
-		return ShaderType(GL_COMPUTE_SHADER, "COMPUTE") ;
+	{
+		return ShaderType(GL_COMPUTE_SHADER, "COMPUTE");
+	}
+		
 }
 
 
 BaseShader::~BaseShader()
 {
-	//glDeleteShader(shad);
+
 }

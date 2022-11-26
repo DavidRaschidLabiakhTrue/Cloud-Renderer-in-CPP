@@ -19,7 +19,7 @@ Window::Window(unsigned int scrW, unsigned int scrH, std::string name) : windowN
 	Window::ScreenWidth = scrW;
 	Window::ScreenHeight = scrH;
 
-	// glfw: initialize and configure
+	
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
@@ -27,7 +27,7 @@ Window::Window(unsigned int scrW, unsigned int scrH, std::string name) : windowN
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
-	// glfw window creation										 
+										 
 	this->WindowPointer = glfwCreateWindow(ScreenWidth, ScreenHeight, name.c_str(), NULL, NULL);
 	if (!this->WindowPointer)
 	{
@@ -55,11 +55,10 @@ Window::Window(unsigned int scrW, unsigned int scrH, std::string name) : windowN
 int Window::gladLoader() 
 {
 
-	// tell GLFW to capture our mouse
+	
 	glfwSetInputMode(this->WindowPointer, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-	// glad: load all OpenGL function pointers
-	// ---------------------------------------
+
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
@@ -69,7 +68,7 @@ int Window::gladLoader()
 	return 1;
 }
 
-// glfw: whenever the mouse moves, this callback is called
+
 void Window::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	if (firstMouse)
@@ -81,7 +80,7 @@ void Window::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	}
 
 	float xoffset = xpos - Window::last.x;
-	float yoffset = Window::last.y - ypos; // reversed since y-coordinates go from bottom to top
+	float yoffset = Window::last.y - ypos; 
 
 	last.x = xpos;
 	last.y = ypos;
@@ -93,13 +92,13 @@ void Window::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 		
 }
 
-// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+
 void Window::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	Window::camera->ProcessMouseScroll(yoffset);
 }
 
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+
 void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);

@@ -155,9 +155,9 @@
     <ClCompile Include="CoreWorkerBackend\BaseShader.cpp" />
     <ClCompile Include="CoreWorkerBackend\buffers.cpp" />
     <ClCompile Include="CoreWorkerBackend\PostProcess.cpp" />
-    <ClCompile Include="CoreWorkerBackend\shader.cpp" />
+    <ClCompile Include="CoreWorkerBackend\Shader.cpp" />
     <ClCompile Include="CoreWorkerBackend\Texture.cpp" />
-    <ClCompile Include="CoreWorkerBackend\utils.cpp" />
+    <ClCompile Include="CoreWorkerBackend\Utils.cpp" />
     <ClCompile Include="CoreWorkerBackend\Window.cpp" />
     <ClCompile Include="Include\imgui\imgui.cpp" />
     <ClCompile Include="Include\imgui\imgui_demo.cpp" />

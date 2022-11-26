@@ -11,7 +11,6 @@ Skybox::Skybox()
 
 	skyboxShader = new PostProcessor("shaders/sky.frag");
 	skyboxFBO = new FrameBufferObject(Window::ScreenWidth, Window::ScreenHeight);
-
 	SunsetPreset1();
 	DefaultPreset();
 }
@@ -20,65 +19,40 @@ void Skybox::setGui()
 {
 	ImGui::Begin(" ");
 	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Sky controls");
-	ImGui::ColorEdit3("Sky top color", (float*)&skyColorTop); // Edit 3 floats representing a color
-	ImGui::ColorEdit3("Sky bottom color", (float*)&skyColorBottom); // Edit 3 floats representing a color
+	ImGui::ColorEdit3("Upper Atmosphere Color", (float*)&skyColorTop); // Edit 3 floats representing a color
+	ImGui::ColorEdit3("Lower Atmosphere Color", (float*)&skyColorBottom); // Edit 3 floats representing a color
 	ImGui::End();
 }
 
-PreloadedColor Skybox::SunsetPreset() 
-{
-	PreloadedColor preset;
 
-	preset.cloudColorBottom = glm::vec3(89, 96, 109) / 255.f;
-	preset.skyColorTop = glm::vec3(177, 174, 119) / 255.f;
-	preset.skyColorBottom = glm::vec3(234, 125, 125) / 255.f;
-
-	preset.lightColor = glm::vec3(255, 171, 125) / 255.f;
-	preset.fogColor = glm::vec3(85, 97, 120) / 255.f;
-
-	presetSunset = preset;
-
-	return preset;
-}
 
 PreloadedColor Skybox::SunsetPreset1() 
 {
-	PreloadedColor preset;
+	presetSunset.cloudColorBottom = glm::vec3(97, 98, 120) / 255.f;
+	presetSunset.skyColorTop = glm::vec3(133, 158, 214) / 255.f;
+	presetSunset.skyColorBottom = glm::vec3(241, 161, 161) / 255.f;
+	presetSunset.lightColor = glm::vec3(255, 201, 201) / 255.f;
+	presetSunset.fogColor = glm::vec3(128, 153, 179) / 255.f;
 
-	preset.cloudColorBottom = glm::vec3(97, 98, 120) / 255.f;
-	preset.skyColorTop = glm::vec3(133, 158, 214) / 255.f;
-	preset.skyColorBottom = glm::vec3(241, 161, 161) / 255.f;
-
-	preset.lightColor = glm::vec3(255, 201, 201) / 255.f;
-	preset.fogColor = glm::vec3(128, 153, 179) / 255.f;
-
-	presetSunset = preset;
-
-	return preset;
+	return presetSunset;
 }
 
 
-PreloadedColor Skybox::DefaultPreset() {
-	PreloadedColor preset;
+PreloadedColor Skybox::DefaultPreset() 
+{
+	highSunPreset.cloudColorBottom = (glm::vec3(65., 70., 80.)*(1.5f / 255.f));
+	highSunPreset.skyColorTop = glm::vec3(0.5, 0.7, 0.8)*1.05f;
+	highSunPreset.skyColorBottom = glm::vec3(0.9, 0.9, 0.95);
+	highSunPreset.lightColor = glm::vec3(255, 255, 230) / 255.f;
+	highSunPreset.fogColor = glm::vec3(0.5, 0.6, 0.7);
 
-	preset.cloudColorBottom = (glm::vec3(65., 70., 80.)*(1.5f / 255.f));
-
-	preset.skyColorTop = glm::vec3(0.5, 0.7, 0.8)*1.05f;
-	preset.skyColorBottom = glm::vec3(0.9, 0.9, 0.95);
-
-	preset.lightColor = glm::vec3(255, 255, 230) / 255.f;
-	preset.fogColor = glm::vec3(0.5, 0.6, 0.7);
-
-	highSunPreset = preset;
-
-	return preset;
+	return highSunPreset;
 }
 
-void Skybox::mixSkyColorPreset(float v, PreloadedColor p1, PreloadedColor p2) {
+void Skybox::mixSkyColorPreset(float v, PreloadedColor p1, PreloadedColor p2) 
+{
 	float a = std::min(std::max(v, 0.0f), 1.0f);
-	float b = 1.0 - a;
-
-	//cloudColorBottom = p1.cloudColorBottom*a + p2.cloudColorBottom*b;
+	float b = 1.0f - a;
 	skyColorTop = p1.skyColorTop*a + p2.skyColorTop*b;
 	skyColorBottom = p1.skyColorBottom*a + p2.skyColorBottom*b;
 	scene->lightColor = p1.lightColor*a + p2.lightColor*b;
@@ -86,7 +60,8 @@ void Skybox::mixSkyColorPreset(float v, PreloadedColor p1, PreloadedColor p2) {
 }
 
 
-void Skybox::draw() {
+void Skybox::draw() 
+{
 	Scene * s = Drawable::scene;
 	skyboxFBO->bind();
 
@@ -105,15 +80,11 @@ void Skybox::draw() {
 	skyboxShader->draw();
 }
 
-void Skybox::update() {
-	auto sigmoid = [](float v) { return 1 / (1.0 + exp(8.0 - v * 40.0)); };
-
+void Skybox::update() 
+{
 	presetSunset.skyColorTop = highSunPreset.skyColorTop = skyColorTop;
 	presetSunset.skyColorBottom = highSunPreset.skyColorBottom = skyColorBottom;
-
-	
-
-	mixSkyColorPreset(sigmoid(scene->lightDir.y), highSunPreset, presetSunset);
+	mixSkyColorPreset((1 / (1.0 + exp(8.0 - scene->lightDir.y * 40.0))), highSunPreset, presetSunset);
 }
 
 Skybox::~Skybox()

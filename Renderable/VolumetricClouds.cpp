@@ -1,6 +1,6 @@
 #include "VolumetricClouds.hpp"
 
-VolumetricClouds::VolumetricClouds(int SW, int SH, DrawableClouds * model): SCR_WIDTH(SW), SCR_HEIGHT(SH), model(model) {
+VolumetricClouds::VolumetricClouds(int SW, int SH, DrawableClouds * drawableCloudModels): screenWidth(SW), screenHeight(SH), drawableCloudModels(drawableCloudModels) {
 
 	cloudsFBO = new TextureSet(SW, SH, 4);
 	cloudsPostProcessingFBO = new FrameBufferObject(Window::ScreenWidth, Window::ScreenHeight, 2);
@@ -19,12 +19,11 @@ void VolumetricClouds::draw()
 		bindTexture2D(cloudsFBO->getColorAttachmentTex(i), i);
 	}
 
-	Shader & cloudData = *model->volumetricCloudsShader;
+	Shader & cloudData = *drawableCloudModels->volumetricCloudsShader;
 	Scene* s = Drawable::scene;
 
 	cloudData.use();
-
-	cloudData.setVec2("iResolution", glm::vec2(SCR_WIDTH, SCR_HEIGHT));
+	cloudData.setVec2("iResolution", glm::vec2(screenWidth, screenHeight));
 	cloudData.setFloat("iTime", glfwGetTime());
 	cloudData.setMat4("inv_proj", glm::inverse(s->proj));
 	cloudData.setMat4("inv_view", glm::inverse(s->cam->GetViewMatrix()));
@@ -32,58 +31,54 @@ void VolumetricClouds::draw()
 	cloudData.setFloat("FOV", s->cam->cameraZoom);
 	cloudData.setVec3("lightDirection", glm::normalize(s->lightPos - s->cam->cameraPosition));
 	cloudData.setVec3("lightColor", s->lightColor);
-	
-	cloudData.setFloat("coverage_multiplier", model->coverage);
-	cloudData.setFloat("cloudSpeed", model->cloudSpeed);
-	cloudData.setFloat("crispiness", model->crispiness);
-	cloudData.setFloat("curliness", model->curliness);
-	cloudData.setFloat("absorption", model->absorption*0.01);
-	cloudData.setFloat("densityFactor", model->density);
-
-	//cloudsShader.setBool("enablePowder", enablePowder);
-	
-	cloudData.setFloat("earthRadius", model->earthRadius);
-	cloudData.setFloat("sphereInnerRadius", model->sphereInnerRadius);
-	cloudData.setFloat("sphereOuterRadius", model->sphereOuterRadius);
-
-	cloudData.setVec3("cloudColorTop", model->cloudColorTop);
-	cloudData.setVec3("cloudColorBottom", model->cloudColorBottom);
-	
-	cloudData.setVec3("skyColorTop", model->sky->skyColorTop);
-	cloudData.setVec3("skyColorBottom", model->sky->skyColorBottom);
-
+	cloudData.setFloat("coverage_multiplier", drawableCloudModels->cloudCoverage);
+	cloudData.setFloat("cloudSpeed", drawableCloudModels->cloudSpeed);
+	cloudData.setFloat("crispiness", drawableCloudModels->cloudCrispiness);
+	cloudData.setFloat("curliness", drawableCloudModels->cloudCurliness);
+	cloudData.setFloat("absorption", drawableCloudModels->cloudAbsorption*0.01);
+	cloudData.setFloat("densityFactor", drawableCloudModels->cloudDensity);
+	cloudData.setFloat("earthRadius", drawableCloudModels->spatialRadiusOfRenderSpace);
+	cloudData.setFloat("sphereInnerRadius", drawableCloudModels->sphereInnerRadius);
+	cloudData.setFloat("sphereOuterRadius", drawableCloudModels->sphereOuterRadius);
+	cloudData.setVec3("cloudColorTop", drawableCloudModels->cloudColorTop);
+	cloudData.setVec3("cloudColorBottom", drawableCloudModels->cloudColorBottom);
+	cloudData.setVec3("skyColorTop", drawableCloudModels->sky->skyColorTop);
+	cloudData.setVec3("skyColorBottom", drawableCloudModels->sky->skyColorBottom);
 	glm::mat4 vp = s->proj*s->cam->GetViewMatrix();
 	cloudData.setMat4("invViewProj", glm::inverse(vp));
 	cloudData.setMat4("gVP", vp);
 
-	cloudData.setSampler3D("cloud", model->perlinID, 0);
-	cloudData.setSampler3D("worley32", model->worleyID, 1);
-	cloudData.setSampler2D("weatherTex", model->weatheringID, 2);
-	cloudData.setSampler2D("depthMap", s->sceneFBO->depthTex, 3);
+	cloudData.setSampler3D("cloud", drawableCloudModels->perlinID, 0);
+	cloudData.setSampler3D("worley32", drawableCloudModels->worleyID, 1);
+	cloudData.setSampler2D("weatherTex", drawableCloudModels->weatheringID, 2);
+	cloudData.setSampler2D("depthMap", s->sceneFBO->depthTextureID, 3);
 
-	cloudData.setSampler2D("sky", model->sky->getSkyTexture(), 4);
+	cloudData.setSampler2D("sky", drawableCloudModels->sky->getSkyTexture(), 4);
 
 
-	if(!s->wireframe)
-		glDispatchCompute(INT_CEIL(SCR_WIDTH, 16), INT_CEIL(SCR_HEIGHT, 16), 1);
+	if (!s->wireframe)
+	{
+		glDispatchCompute(INT_CEIL(screenWidth, 16), INT_CEIL(screenHeight, 16), 1);
+	}
+		
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
 	
-	//copy to lastFrameFBO
 
-	if (model->postProcess) 
+
+	if (drawableCloudModels->postProcess) 
 	{
-		// cloud post processing filtering
+
 		cloudsPostProcessingFBO->bind();
-		Shader& cloudsPPShader = model->postProcessingShader->getShader();
+		Shader& cloudsPPShader = drawableCloudModels->postProcessingShader->getShader();
 
 		cloudsPPShader.use();
 
-		cloudsPPShader.setSampler2D("clouds", cloudsFBO->getColorAttachmentTex(VolumetricClouds::fragColor), 0);
-		cloudsPPShader.setSampler2D("emissions", cloudsFBO->getColorAttachmentTex(VolumetricClouds::bloom), 1);
-		cloudsPPShader.setSampler2D("depthMap", s->sceneFBO->depthTex, 2);
+		cloudsPPShader.setSampler2D("clouds", cloudsFBO->getColorAttachmentTex(VolumetricClouds::cloudFragColor), 0);
+		cloudsPPShader.setSampler2D("emissions", cloudsFBO->getColorAttachmentTex(VolumetricClouds::cloudBloom), 1);
+		cloudsPPShader.setSampler2D("depthMap", s->sceneFBO->depthTextureID, 2);
 
-		cloudsPPShader.setVec2("cloudRenderResolution", glm::vec2(SCR_WIDTH, SCR_HEIGHT));
+		cloudsPPShader.setVec2("cloudRenderResolution", glm::vec2(screenWidth, screenHeight));
 		cloudsPPShader.setVec2("resolution", glm::vec2(Window::ScreenWidth , Window::ScreenHeight));
 
 		glm::mat4 lightModel;
@@ -91,24 +86,21 @@ void VolumetricClouds::draw()
 		glm::vec4 pos = vp * lightModel * glm::vec4(0.0, 60.0, 0.0, 1.0);
 		pos = pos / pos.w;
 		pos = pos * 0.5f + 0.5f;
-
-		//std::cout << pos.x << ": X; " << pos.y << " Y;" << std::endl;
 		cloudsPPShader.setVec4("lightPos", pos);
-
 		bool isLightInFront = false;
 		float lightDotCameraFront = glm::dot(glm::normalize(s->lightPos - s->cam->cameraPosition), glm::normalize(s->cam->cameraFront));
-		//std::cout << "light dot camera front= " << lightDotCameraFront << std::endl;
-		if (lightDotCameraFront > 0.2) {
+		if (lightDotCameraFront > 0.2) 
+		{
 			isLightInFront = true;
 		}
-
 		cloudsPPShader.setBool("isLightInFront", isLightInFront);
-		cloudsPPShader.setBool("enableGodRays", model->enableGodRays);
 		cloudsPPShader.setFloat("lightDotCameraFront", lightDotCameraFront);
-
 		cloudsPPShader.setFloat("time", glfwGetTime());
 		if (!s->wireframe)
-			model->postProcessingShader->draw();
+		{
+			drawableCloudModels->postProcessingShader->draw();
+		}
+			
 	}
 }
 

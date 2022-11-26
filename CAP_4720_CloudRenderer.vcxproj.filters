@@ -99,7 +99,7 @@
     <ClCompile Include="CoreWorkerBackend\Texture.cpp">
       <Filter>GLUtility</Filter>
     </ClCompile>
-    <ClCompile Include="CoreWorkerBackend\utils.cpp">
+    <ClCompile Include="CoreWorkerBackend\Utils.cpp">
       <Filter>GLUtility</Filter>
     </ClCompile>
     <ClCompile Include="CoreWorkerBackend\buffers.cpp">
@@ -108,7 +108,7 @@
     <ClCompile Include="CoreWorkerBackend\PostProcess.cpp">
       <Filter>Shaders\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="CoreWorkerBackend\shader.cpp">
+    <ClCompile Include="CoreWorkerBackend\Shader.cpp">
       <Filter>Shaders\Shader</Filter>
     </ClCompile>
     <ClCompile Include="CoreWorkerBackend\BaseShader.cpp">

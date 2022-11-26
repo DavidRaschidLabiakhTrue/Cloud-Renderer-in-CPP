@@ -104,8 +104,8 @@ void Main::postProcess1(const FrameBufferObject& fbo, VolumetricClouds& volumetr
 	Shader& post = PostProcessing.getShader();
 	post.use();
 	post.setVec2("resolution", vec2(1280, 720));
-	post.setSampler2D("screenTexture", fbo.tex, 0);
-	post.setSampler2D("depthTex", fbo.depthTex, 2);
+	post.setSampler2D("screenTexture", fbo.textureID, 0);
+	post.setSampler2D("depthTex", fbo.depthTextureID, 2);
 	post.setSampler2D("cloudTEX", volumetricClouds.getCloudsRawTexture(), 1);
 	PostProcessing.draw();
 	PostProcessor::enableTests();
@@ -118,9 +118,9 @@ void Main::postProcess2(const Scene& scene, const FrameBufferObject& fbo, Volume
 	post.use();
 	post.setVec2("resolution", vec2(Window::ScreenWidth, Window::ScreenHeight));
 	post.setVec3("cameraPosition", scene.cam->cameraPosition);
-	post.setSampler2D("screenTexture", fbo.tex, 0);
+	post.setSampler2D("screenTexture", fbo.textureID, 0);
 	post.setSampler2D("cloudTEX", volumetricClouds.getCloudsTexture(), 1);
-	post.setSampler2D("depthTex", fbo.depthTex, 2);
+	post.setSampler2D("depthTex", fbo.depthTextureID, 2);
 	post.setSampler2D("cloudDistance", volumetricClouds.getCloudsTexture(VolumetricClouds::cloudDistance), 3);
 	post.setMat4("VP", scene.proj * view);
 	PostProcessing.draw();

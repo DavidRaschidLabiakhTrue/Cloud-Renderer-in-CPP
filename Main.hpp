@@ -15,6 +15,10 @@
 #include "Renderable/Skybox.hpp"
 #include "Renderable/PlaneCounter.hpp"
 #include "Renderable/DrawableClouds.hpp"
+#include "Renderable/Scene.hpp"
+#include "Renderable/Drawable.hpp"
+#include "Renderable/GUI.hpp"
+
 
 #include <Camera.hpp>
 #include "Include/stb/stb_image.h"
@@ -24,11 +28,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/random.hpp>
-
-
-#include "Renderable/Scene.hpp"
-#include "Renderable/Drawable.hpp"
-#include "Renderable/GUI.hpp"
 
 #include <iostream>
 #include <vector>

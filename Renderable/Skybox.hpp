@@ -29,10 +29,10 @@ class Skybox : public Drawable
 
 		unsigned int getSkyTexture() 
 		{
-			return skyboxFBO->tex;
+			return skyboxFBO->textureID;
 		}
 		PreloadedColor DefaultPreset();
-		PreloadedColor SunsetPreset();
+		
 		PreloadedColor SunsetPreset1();
 		PreloadedColor presetSunset, highSunPreset;
 		friend class VolumetricClouds;

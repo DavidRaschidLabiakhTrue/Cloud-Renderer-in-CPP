@@ -13,4 +13,4 @@ using namespace std;
 
 unsigned int generateTexture2D(int w, int h);
 unsigned int generateTexture3D(int w, int h, int d);
-void bindTexture2D(unsigned int tex, int unit = 0);
+void bindTexture2D(unsigned int textureID, int unit = 0);

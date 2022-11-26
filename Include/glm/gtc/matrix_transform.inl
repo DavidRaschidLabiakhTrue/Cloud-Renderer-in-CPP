@@ -439,13 +439,13 @@ namespace glm
 	GLM_FUNC_QUALIFIER tvec3<T, P> project
 	(
 		tvec3<T, P> const & obj,
-		tmat4x4<T, P> const & model,
+		tmat4x4<T, P> const & drawableCloudModels,
 		tmat4x4<T, P> const & proj,
 		tvec4<U, P> const & viewport
 	)
 	{
 		tvec4<T, P> tmp = tvec4<T, P>(obj, static_cast<T>(1));
-		tmp = model * tmp;
+		tmp = drawableCloudModels * tmp;
 		tmp = proj * tmp;
 
 		tmp /= tmp.w;
@@ -465,12 +465,12 @@ namespace glm
 	GLM_FUNC_QUALIFIER tvec3<T, P> unProject
 	(
 		tvec3<T, P> const & win,
-		tmat4x4<T, P> const & model,
+		tmat4x4<T, P> const & drawableCloudModels,
 		tmat4x4<T, P> const & proj,
 		tvec4<U, P> const & viewport
 	)
 	{
-		tmat4x4<T, P> Inverse = inverse(proj * model);
+		tmat4x4<T, P> Inverse = inverse(proj * drawableCloudModels);
 
 		tvec4<T, P> tmp = tvec4<T, P>(win, T(1));
 		tmp.x = (tmp.x - T(viewport[0])) / T(viewport[2]);

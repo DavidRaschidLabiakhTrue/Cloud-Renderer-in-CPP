@@ -34,8 +34,8 @@ class Shader
 		void setVec3(const std::string &name, glm::vec3 vector) const;
 		void setVec4(const std::string &name, glm::vec4 vector) const;
 		void setMat4(const std::string &name, glm::mat4 matrix) const;
-		void setSampler2D(const std::string &name, unsigned int texture, int id) const;
-		void setSampler3D(const std::string &name, unsigned int texture, int id) const;
+		void setSampler2D(const std::string &name, unsigned int texturePointer, int id) const;
+		void setSampler3D(const std::string &name, unsigned int texturePointer, int id) const;
 
 	protected:
 		unsigned int id;

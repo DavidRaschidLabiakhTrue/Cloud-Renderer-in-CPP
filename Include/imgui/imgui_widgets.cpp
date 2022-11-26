@@ -4138,8 +4138,8 @@ bool ImGui::ColorPicker4(const char* label, float col[4], ImGuiColorEditFlags fl
     ImVec2 triangle_pb = ImVec2(triangle_r * -0.5f, triangle_r * -0.866025f); // Black point.
     ImVec2 triangle_pc = ImVec2(triangle_r * -0.5f, triangle_r * +0.866025f); // White point.
 
-    float H,S,V;
-    ColorConvertRGBtoHSV(col[0], col[1], col[2], H, S, V);
+    float frameHeight,S,V;
+    ColorConvertRGBtoHSV(col[0], col[1], col[2], frameHeight, S, V);
 
     bool value_changed = false, value_changed_h = false, value_changed_sv = false;
 
@@ -4156,13 +4156,13 @@ bool ImGui::ColorPicker4(const char* label, float col[4], ImGuiColorEditFlags fl
             if (initial_dist2 >= (wheel_r_inner-1)*(wheel_r_inner-1) && initial_dist2 <= (wheel_r_outer+1)*(wheel_r_outer+1))
             {
                 // Interactive with Hue wheel
-                H = ImAtan2(current_off.y, current_off.x) / IM_PI*0.5f;
-                if (H < 0.0f)
-                    H += 1.0f;
+                frameHeight = ImAtan2(current_off.y, current_off.x) / IM_PI*0.5f;
+                if (frameHeight < 0.0f)
+                    frameHeight += 1.0f;
                 value_changed = value_changed_h = true;
             }
-            float cos_hue_angle = ImCos(-H * 2.0f * IM_PI);
-            float sin_hue_angle = ImSin(-H * 2.0f * IM_PI);
+            float cos_hue_angle = ImCos(-frameHeight * 2.0f * IM_PI);
+            float sin_hue_angle = ImSin(-frameHeight * 2.0f * IM_PI);
             if (ImTriangleContainsPoint(triangle_pa, triangle_pb, triangle_pc, ImRotate(initial_off, cos_hue_angle, sin_hue_angle)))
             {
                 // Interacting with SV triangle
@@ -4197,7 +4197,7 @@ bool ImGui::ColorPicker4(const char* label, float col[4], ImGuiColorEditFlags fl
         InvisibleButton("hue", ImVec2(bars_width, sv_picker_size));
         if (IsItemActive())
         {
-            H = ImSaturate((io.MousePos.y - picker_pos.y) / (sv_picker_size-1));
+            frameHeight = ImSaturate((io.MousePos.y - picker_pos.y) / (sv_picker_size-1));
             value_changed = value_changed_h = true;
         }
     }
@@ -4255,7 +4255,7 @@ bool ImGui::ColorPicker4(const char* label, float col[4], ImGuiColorEditFlags fl
 
     // Convert back color to RGB
     if (value_changed_h || value_changed_sv)
-        ColorConvertHSVtoRGB(H >= 1.0f ? H - 10 * 1e-6f : H, S > 0.0f ? S : 10*1e-6f, V > 0.0f ? V : 1e-6f, col[0], col[1], col[2]);
+        ColorConvertHSVtoRGB(frameHeight >= 1.0f ? frameHeight - 10 * 1e-6f : frameHeight, S > 0.0f ? S : 10*1e-6f, V > 0.0f ? V : 1e-6f, col[0], col[1], col[2]);
 
     // R,G,B and H,S,V slider color editor
     bool value_changed_fix_hue_wrap = false;
@@ -4284,16 +4284,16 @@ bool ImGui::ColorPicker4(const char* label, float col[4], ImGuiColorEditFlags fl
     {
         float new_H, new_S, new_V;
         ColorConvertRGBtoHSV(col[0], col[1], col[2], new_H, new_S, new_V);
-        if (new_H <= 0 && H > 0)
+        if (new_H <= 0 && frameHeight > 0)
         {
             if (new_V <= 0 && V != new_V)
-                ColorConvertHSVtoRGB(H, S, new_V <= 0 ? V * 0.5f : new_V, col[0], col[1], col[2]);
+                ColorConvertHSVtoRGB(frameHeight, S, new_V <= 0 ? V * 0.5f : new_V, col[0], col[1], col[2]);
             else if (new_S <= 0)
-                ColorConvertHSVtoRGB(H, new_S <= 0 ? S * 0.5f : new_S, new_V, col[0], col[1], col[2]);
+                ColorConvertHSVtoRGB(frameHeight, new_S <= 0 ? S * 0.5f : new_S, new_V, col[0], col[1], col[2]);
         }
     }
 
-    ImVec4 hue_color_f(1, 1, 1, 1); ColorConvertHSVtoRGB(H, 1, 1, hue_color_f.x, hue_color_f.y, hue_color_f.z);
+    ImVec4 hue_color_f(1, 1, 1, 1); ColorConvertHSVtoRGB(frameHeight, 1, 1, hue_color_f.x, hue_color_f.y, hue_color_f.z);
     ImU32 hue_color32 = ColorConvertFloat4ToU32(hue_color_f);
     ImU32 col32_no_alpha = ColorConvertFloat4ToU32(ImVec4(col[0], col[1], col[2], 1.0f));
 
@@ -4321,8 +4321,8 @@ bool ImGui::ColorPicker4(const char* label, float col[4], ImGuiColorEditFlags fl
         }
 
         // Render Cursor + preview on Hue Wheel
-        float cos_hue_angle = ImCos(H * 2.0f * IM_PI);
-        float sin_hue_angle = ImSin(H * 2.0f * IM_PI);
+        float cos_hue_angle = ImCos(frameHeight * 2.0f * IM_PI);
+        float sin_hue_angle = ImSin(frameHeight * 2.0f * IM_PI);
         ImVec2 hue_cursor_pos(wheel_center.x + cos_hue_angle * (wheel_r_inner+wheel_r_outer)*0.5f, wheel_center.y + sin_hue_angle * (wheel_r_inner+wheel_r_outer)*0.5f);
         float hue_cursor_rad = value_changed_h ? wheel_thickness * 0.65f : wheel_thickness * 0.55f;
         int hue_cursor_segments = ImClamp((int)(hue_cursor_rad / 1.4f), 9, 32);
@@ -4357,7 +4357,7 @@ bool ImGui::ColorPicker4(const char* label, float col[4], ImGuiColorEditFlags fl
         // Render Hue Bar
         for (int i = 0; i < 6; ++i)
             draw_list->AddRectFilledMultiColor(ImVec2(bar0_pos_x, picker_pos.y + i * (sv_picker_size / 6)), ImVec2(bar0_pos_x + bars_width, picker_pos.y + (i + 1) * (sv_picker_size / 6)), hue_colors[i], hue_colors[i], hue_colors[i + 1], hue_colors[i + 1]);
-        float bar0_line_y = (float)(int)(picker_pos.y + H * sv_picker_size + 0.5f);
+        float bar0_line_y = (float)(int)(picker_pos.y + frameHeight * sv_picker_size + 0.5f);
         RenderFrameBorder(ImVec2(bar0_pos_x, picker_pos.y), ImVec2(bar0_pos_x + bars_width, picker_pos.y + sv_picker_size), 0.0f);
         RenderArrowsForVerticalBar(draw_list, ImVec2(bar0_pos_x - 1, bar0_line_y), ImVec2(bars_triangles_half_sz + 1, bars_triangles_half_sz), bars_width + 2.0f);
     }

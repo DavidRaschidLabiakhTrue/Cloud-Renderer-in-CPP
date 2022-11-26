@@ -136,7 +136,7 @@ class Camera
 			cameraPosition.y = perlin(st, 13, 0.01, 20.);
 		}
 
-		// Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
+		
 		void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true)
 		{
 			xoffset *= cameraSensitivity;
@@ -145,7 +145,7 @@ class Camera
 			cameraYaw += xoffset;
 			cameraPitch += yoffset;
 
-			// Make sure that when pitch is out of bounds, screen doesn't get flipped
+			
 			if (constrainPitch)
 			{
 				if (cameraPitch > 89.0f)

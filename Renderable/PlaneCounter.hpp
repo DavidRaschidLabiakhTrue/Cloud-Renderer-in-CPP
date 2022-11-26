@@ -15,6 +15,8 @@ class PlaneCounter : public Drawable
 		PlaneCounter(glm::vec2 position, float scale, float height);
 		virtual ~PlaneCounter();
 		virtual void draw();
+		unsigned int vao, vbo, ebo;
+		float scale, height;
 		virtual void setGui();
 		void bindRefractionFBO();
 		void bindReflectionFBO();
@@ -30,7 +32,8 @@ class PlaneCounter : public Drawable
 
 
 
-		float getHeight() {
+		float getHeight() 
+		{
 			return height;
 		}
 
@@ -42,15 +45,11 @@ class PlaneCounter : public Drawable
 		{
 			return *reflectionFBO;
 		}
-
-	private:
 		void drawVertices();
 
-		unsigned int vao, vbo, ebo;
-		float scale, height;
+
 		FrameBufferObject * reflectionFBO; // these effectively do nothing but help the clouds *be clouds*
 		FrameBufferObject * refractionFBO; // these effectively do nothing but help the clouds *be clouds*
-
 		glm::mat4 modelMatrix;
 		Shader * shader;
 };

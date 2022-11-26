@@ -22,30 +22,30 @@ bool checkCompileErrors(unsigned int shader, std::string type, std::string shade
 
 class BaseShader
 {
-public:
-	BaseShader(const char * shaderPathChar);
-	virtual ~BaseShader();
+	public:
+		BaseShader(const char * shaderPathChar);
+		virtual ~BaseShader();
 
-	std::string getName() 
-	{
-		return getShaderName(shaderPath.c_str());
-	}
-	unsigned int getShad()
-	{
-		return shaderID;
-	}
-	ShaderType getType() 
-	{
-		return shaderTypeID;
-	}
+		std::string getName() 
+		{
+			return getShaderName(shaderPath.c_str());
+		}
+		unsigned int getShad()
+		{
+			return shaderID;
+		}
+		ShaderType getType() 
+		{
+			return shaderTypeID;
+		}
 
-private:
-	std::string loadShaderFromFile(const char* shaderPath);
+	private:
+		std::string loadShaderFromFile(const char* shaderPath);
 
-	std::string shaderPath;
+		std::string shaderPath;
 
 
-	unsigned int shaderID;
-	ShaderType shaderTypeID;
+		unsigned int shaderID;
+		ShaderType shaderTypeID;
 };
 

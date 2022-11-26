@@ -40,7 +40,7 @@ unsigned int generateTexture3D(int w, int h, int d)
 }
 
 
-void bindTexture2D(unsigned int tex, int unit) 
+void bindTexture2D(unsigned int textureID, int unit) 
 {
-	glBindImageTexture(unit, tex, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+	glBindImageTexture(unit, textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 }
