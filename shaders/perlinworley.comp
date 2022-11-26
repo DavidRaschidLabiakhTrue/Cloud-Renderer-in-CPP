@@ -1,16 +1,10 @@
 #version 430
 
-/*
-	Fills a 3D texture with PERLIN-WORLEY and WORLEY noises to be used
-	in the volumetric clouds to gather the base shape
-*/
-
 layout (local_size_x = 4, local_size_y = 4, local_size_z = 4) in;
 
 layout (rgba8, binding = 0) uniform image3D PerlinWorleyVolume;
 
-// =====================================================================================
-// Code from Sebastien Hillarie 3d noise generator https://github.com/sebh/TileableVolumeNoise
+
 const float frequenceMul[6u] = float[]( 2.0,8.0,14.0,20.0,26.0,32.0 );
 
 
@@ -228,9 +222,9 @@ float worleyNoise3D(vec3 p, float cellCount)
 
 float perlinNoise3D(vec3 pIn, float frequency, int octaveCount)
 {
-	float octaveFrenquencyFactor = 2.0;			// noise frequency factor between octave, forced to 2
+	float octaveFrenquencyFactor = 2.0;			
 
-	// Compute the sum for each octave
+
 	float sum = 0.0f;
 	float weightSum = 0.0f;
 	float weight = 0.5f;
@@ -241,7 +235,7 @@ float perlinNoise3D(vec3 pIn, float frequency, int octaveCount)
 		sum += val * weight;
 		weightSum += weight;
 
-		weight *= weight; // observe, weight starts at 0.5. successive multiplication *lowers* the weight
+		weight *= weight; 
 		frequency *= octaveFrenquencyFactor;
 	}
 

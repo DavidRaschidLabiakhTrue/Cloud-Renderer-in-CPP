@@ -69,7 +69,7 @@ void main()
 	vec3 startPos, endPos;
 	vec4 v = vec4(0.0);
 
-	//compute background color
+
 	vec3 cubeMapEndPos;
 	
 	raySphereintersectionSkyMap(worldDir, 0.5, cubeMapEndPos);
