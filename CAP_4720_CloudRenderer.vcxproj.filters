@@ -202,9 +202,6 @@
     <None Include="shaders\clouds_post.frag">
       <Filter>Shaders\ShaderCode</Filter>
     </None>
-    <None Include="shaders\copyFrame.frag">
-      <Filter>Shaders\ShaderCode</Filter>
-    </None>
     <None Include="shaders\perlinworley.comp">
       <Filter>Shaders\ShaderCode</Filter>
     </None>
@@ -230,12 +227,6 @@
       <Filter>Shaders\ShaderCode</Filter>
     </None>
     <None Include="shaders\ReflectablePlane.vert">
-      <Filter>Shaders\ShaderCode</Filter>
-    </None>
-    <None Include="shaders\textShader.frag">
-      <Filter>Shaders\ShaderCode</Filter>
-    </None>
-    <None Include="shaders\textShader.vert">
       <Filter>Shaders\ShaderCode</Filter>
     </None>
     <None Include="shaders\volumetric_clouds.comp">

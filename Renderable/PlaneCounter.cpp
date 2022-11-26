@@ -50,52 +50,11 @@ void PlaneCounter::setGui()
 
 void PlaneCounter::draw() 
 {
-	// draw water plane
 	shader->use();
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	Scene * se = Drawable::scene;
-
-	//this->setPosition(glm::vec2(se->cam.Position[0], se->cam.Position[2]), scale, height);
-	this->setHeight(height);
-
 	shader->setMat4("modelMatrix", modelMatrix);
-	shader->setMat4("gVP", se->proj*se->cam->GetViewMatrix());
-
-	shader->setVec3("u_LightColor", se->lightColor);
-	shader->setVec3("u_LightPosition", se->lightPos);
-
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, reflectionFBO->tex);
-	shader->setInt("reflectionTex", 0);
-
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, refractionFBO->tex);
-	shader->setInt("refractionTex", 1);
-
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, dudvMap);
-	shader->setInt("waterDUDV", 2);
-
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, normalMap);
-	shader->setInt("normalMap", 3);
-
-	glActiveTexture(GL_TEXTURE4);
-	glBindTexture(GL_TEXTURE_2D, refractionFBO->depthTex);
-	shader->setInt("depthMap", 4);
-
-	float waveSpeed = 0.25;
-	float time = glfwGetTime();
-
-	float moveFactor = waveSpeed * time;
-	shader->setFloat("moveFactor", moveFactor);
-
-	shader->setVec3("cameraPosition", se->cam->cameraPosition);
-
-	//waterPlane->Draw(*shad);
+	shader->setMat4("gVP", Drawable::scene->proj * Drawable::scene->cam->GetViewMatrix());
 	this->drawVertices();
 	glDisable(GL_BLEND);
 }

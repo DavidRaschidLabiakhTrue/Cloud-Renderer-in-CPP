@@ -47,8 +47,7 @@ void DrawableClouds::initShaders()
 	postProcessingShader = new PostProcessor("shaders/clouds_post.frag");
 	//compute shaders
 	weatherShader = new Shader("weatherMap");
-	weatherShader->attachShader("shaders/weather.comp");
-	weatherShader->linkPrograms();
+	weatherShader->attachShader("shaders/weather.comp")->linkPrograms();
 }
 
 void DrawableClouds::generateModelTextures()
@@ -124,7 +123,8 @@ DrawableClouds::~DrawableClouds()
 void DrawableClouds::update()
 {
 	seed = scene->seed;
-	if (seed != oldSeed) {
+	if (seed != oldSeed) 
+	{
 		generateWeatherMap();
 		oldSeed = seed;
 	}

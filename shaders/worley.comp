@@ -1,9 +1,6 @@
 #version 430
 
-/*
-	Fills a 3D texture with WORLEY noise to be used in the volumetric
-	clouds as shape eroder
-*/
+
 
 //Code from https://github.com/NadirRoGue
 //Special thanks https://github.com/NadirRoGue
@@ -12,13 +9,12 @@ layout (local_size_x = 4, local_size_y = 4, local_size_z = 4) in;
 
 layout (rgba8, binding = 0) uniform image3D outVolTex;
 
-// =====================================================================================
-// Code from Sebastien Hillarie 3d noise generator https://github.com/sebh/TileableVolumeNoise
-uniform float frequenceMul[6u] = float[]( 2.0,8.0,14.0,20.0,26.0,32.0 );
+
+const float frequenceMul[6u] = float[]( 2.0,8.0,14.0,20.0,26.0,32.0 );
 
 float hash(int n)
 {
-	return fract(sin(float(n) + 1.951) * 43758.5453123);
+	return fract(sin(float(n) + 1.951) * 43758.5453123); // standard shader rand
 }
 
 float noise(vec3 x)
@@ -28,16 +24,7 @@ float noise(vec3 x)
 
 	f = f*f*(vec3(3.0) - vec3(2.0) * f);
 	float n = p.x + p.y*57.0 + 113.0*p.z;
-	return mix(
-		mix(
-			mix(hash(int(n + 0.0)), hash(int(n + 1.0)), f.x),
-			mix(hash(int(n + 57.0)), hash(int(n + 58.0)), f.x),
-			f.y),
-		mix(
-			mix(hash(int(n + 113.0)), hash(int(n + 114.0)), f.x),
-			mix(hash(int(n + 170.0)), hash(int(n + 171.0)), f.x),
-			f.y),
-		f.z);
+	return mix(mix(mix(hash(int(n + 0.0)), hash(int(n + 1.0)), f.x),mix(hash(int(n + 57.0)), hash(int(n + 58.0)), f.x),f.y),mix(mix(hash(int(n + 113.0)), hash(int(n + 114.0)), f.x),mix(hash(int(n + 170.0)), hash(int(n + 171.0)), f.x),f.y),f.z);
 }
 
 float cells(vec3 p, float cellCount)
@@ -65,7 +52,7 @@ float cells(vec3 p, float cellCount)
 }
 
 
-// From GLM (gtc/noise.hpp & detail/_noise.hpp)
+
 vec4 mod289(vec4 x)
 {
 	return x - floor(x * vec4(1.0) / vec4(289.0)) * vec4(289.0);
@@ -242,22 +229,16 @@ float perlinNoise3D(vec3 pIn, float frequency, int octaveCount)
 	float weight = 0.5f;
 	for (int oct = 0; oct < octaveCount; oct++)
 	{
-		// Perlin vec3 is bugged in GLM on the Z axis :(, black stripes are visible
-		// So instead we use 4d Perlin and only use xyz...
-		//glm::vec3 p(x * freq, y * freq, z * freq);
-		//float val = glm::perlin(p, glm::vec3(freq)) *0.5 + 0.5;
-
-		vec4 p = vec4(pIn.x, pIn.y, pIn.z, 0.0) * vec4(frequency);
-		float val = glmPerlin4D(p, vec4(frequency));
+		float val = glmPerlin4D(vec4(pIn.x, pIn.y, pIn.z, 0.0) * vec4(frequency), vec4(frequency));
 
 		sum += val * weight;
 		weightSum += weight;
 
-		weight *= weight;
+		weight *= weight; // observe, weight starts at 0.5. successive multiplication *lowers* the weight
 		frequency *= octaveFrenquencyFactor;
 	}
 
-	float noise = (sum / weightSum) *0.5 + 0.5;;
+	float noise = (sum / weightSum);
 	noise = min(noise, 1.0f);
 	noise = max(noise, 0.0f);
 	return noise;
@@ -273,12 +254,7 @@ vec4 stackable3DNoise(ivec3 pixel)
 	float worleyNoise1 = (1.0f - worleyNoise3D(coord, cellCount * 2.0));
 	float worleyNoise2 = (1.0f - worleyNoise3D(coord, cellCount * 4.0));
 	float worleyNoise3 = (1.0f - worleyNoise3D(coord, cellCount * 8.0));
-	float worleyFBM0 = worleyNoise0*0.625f + worleyNoise1*0.25f + worleyNoise2*0.125f;
-	float worleyFBM1 = worleyNoise1*0.625f + worleyNoise2*0.25f + worleyNoise3*0.125f;
-	float worleyFBM2 = worleyNoise2*0.75f + worleyNoise3*0.25f; 
-	// cellCount=4 -> worleyNoise4 is just noise due to sampling frequency=texel freque. So only take into account 2 frequencies for FBM
-
-	return vec4(worleyFBM0, worleyFBM1, worleyFBM2, 1.0);
+	return vec4(worleyNoise0*0.625f + worleyNoise1*0.25f + worleyNoise2*0.125f, worleyNoise1*0.625f + worleyNoise2*0.25f + worleyNoise3*0.125f, worleyNoise2*0.75f + worleyNoise3*0.25f, 1.0);
 }
 
 void main()

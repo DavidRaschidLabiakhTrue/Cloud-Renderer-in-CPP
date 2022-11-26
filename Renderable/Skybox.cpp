@@ -16,7 +16,8 @@ Skybox::Skybox()
 	DefaultPreset();
 }
 
-void Skybox::setGui() {
+void Skybox::setGui() 
+{
 	ImGui::Begin(" ");
 	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Sky controls");
 	ImGui::ColorEdit3("Sky top color", (float*)&skyColorTop); // Edit 3 floats representing a color
@@ -24,7 +25,8 @@ void Skybox::setGui() {
 	ImGui::End();
 }
 
-PreloadedColor Skybox::SunsetPreset() {
+PreloadedColor Skybox::SunsetPreset() 
+{
 	PreloadedColor preset;
 
 	preset.cloudColorBottom = glm::vec3(89, 96, 109) / 255.f;

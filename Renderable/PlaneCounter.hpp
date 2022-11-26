@@ -28,26 +28,13 @@ class PlaneCounter : public Drawable
 			this->modelMatrix = transMatrix * scaleMatrix;
 		}
 
-		void setHeight(float height) 
-		{
-			float scale = modelMatrix[0][0];
-			float position_x = modelMatrix[3][0];
-			float position_z = modelMatrix[3][2];
 
-			glm::mat4 identity;
-			glm::mat4 scaleMatrix = glm::scale(identity, glm::vec3(scale, scale, scale));
-			glm::mat4 transMatrix = glm::translate(identity, glm::vec3(position_x, height, position_z));
-			this->modelMatrix = transMatrix * scaleMatrix;
-		}
 
 		float getHeight() {
 			return height;
 		}
 
-		glm::mat4 getModelMatrix() {
-			return modelMatrix;
-		}
-
+	
 		static const int FBOw = 1280;
 		static const int FBOh = 720;
 
@@ -64,7 +51,6 @@ class PlaneCounter : public Drawable
 		FrameBufferObject * reflectionFBO; // these effectively do nothing but help the clouds *be clouds*
 		FrameBufferObject * refractionFBO; // these effectively do nothing but help the clouds *be clouds*
 
-		unsigned int dudvMap, normalMap;
 		glm::mat4 modelMatrix;
 		Shader * shader;
 };
