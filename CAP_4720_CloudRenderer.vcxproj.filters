@@ -40,6 +40,9 @@
     <Filter Include="Shaders\ShaderCode">
       <UniqueIdentifier>{9d89fdbd-98b6-42f8-9180-383825c32e21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ProjectExtras">
+      <UniqueIdentifier>{e485fdd8-a615-4eb8-8f83-83cd84492a75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BuildExternal\glad.c">
@@ -113,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="CoreWorkerBackend\BaseShader.cpp">
       <Filter>Shaders\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectExtras\TimeOfDay.cpp">
+      <Filter>ProjectExtras</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="CoreWorkerBackend\BaseShader.hpp">
       <Filter>Shaders\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectExtras\TimeOfDay.hpp">
+      <Filter>ProjectExtras</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

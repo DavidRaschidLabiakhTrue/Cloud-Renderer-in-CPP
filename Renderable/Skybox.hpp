@@ -5,6 +5,8 @@
 #include "Drawable.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "../ProjectExtras/TimeOfDay.hpp"
+
 struct PreloadedColor 
 {
 	glm::vec3 cloudColorBottom, skyColorTop, skyColorBottom, lightColor, fogColor;
@@ -36,7 +38,9 @@ class Skybox : public Drawable
 		PreloadedColor SunsetPreset1();
 		PreloadedColor presetSunset, highSunPreset;
 		friend class VolumetricClouds;
-	private:
+
+		TimeOfDayOperator timeOperator;
+
 		glm::vec3 skyColorTop, skyColorBottom;
 
 		PostProcessor * skyboxShader;

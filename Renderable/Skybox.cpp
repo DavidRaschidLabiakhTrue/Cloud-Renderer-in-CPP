@@ -4,7 +4,7 @@
 #include "../CoreWorkerBackend/Window.hpp"
 #include "../imgui/imgui.h"
 
-Skybox::Skybox()
+Skybox::Skybox() : timeOperator()
 {
 	skyColorTop = glm::vec3(0.5, 0.7, 0.8)*1.05f;
 	skyColorBottom = glm::vec3(0.9, 0.9, 0.95);
@@ -18,6 +18,7 @@ Skybox::Skybox()
 void Skybox::setGui() 
 {
 	ImGui::Begin(" ");
+	timeOperator.setGui();
 	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Sky controls");
 	ImGui::ColorEdit3("Upper Atmosphere Color", (float*)&skyColorTop); // Edit 3 floats representing a color
 	ImGui::ColorEdit3("Lower Atmosphere Color", (float*)&skyColorBottom); // Edit 3 floats representing a color
@@ -82,8 +83,8 @@ void Skybox::draw()
 
 void Skybox::update() 
 {
-	presetSunset.skyColorTop = highSunPreset.skyColorTop = skyColorTop;
-	presetSunset.skyColorBottom = highSunPreset.skyColorBottom = skyColorBottom;
+	presetSunset.skyColorTop = highSunPreset.skyColorTop = timeOperator.col.upperAtmosphereColor;
+	presetSunset.skyColorBottom = highSunPreset.skyColorBottom = timeOperator.col.lowerAtmosphereColor;
 	mixSkyColorPreset((1 / (1.0 + exp(8.0 - scene->lightDir.y * 40.0))), highSunPreset, presetSunset);
 }
 

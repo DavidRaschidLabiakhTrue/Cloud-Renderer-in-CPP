@@ -168,6 +168,7 @@
     <ClCompile Include="Include\stb\stb_image.cpp" />
     <ClCompile Include="Include\stb\stb_image_write.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ProjectExtras\TimeOfDay.cpp" />
     <ClCompile Include="Renderable\Drawable.cpp" />
     <ClCompile Include="Renderable\DrawableClouds.cpp" />
     <ClCompile Include="Renderable\GUI.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Include\stb\stb_image.h" />
     <ClInclude Include="Include\stb\stb_image_write.h" />
     <ClInclude Include="Main.hpp" />
+    <ClInclude Include="ProjectExtras\TimeOfDay.hpp" />
     <ClInclude Include="Renderable\Drawable.hpp" />
     <ClInclude Include="Renderable\DrawableClouds.hpp" />
     <ClInclude Include="Renderable\GUI.hpp" />
